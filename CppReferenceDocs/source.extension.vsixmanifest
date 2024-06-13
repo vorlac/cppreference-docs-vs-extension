@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011"
+                 xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
+    <Metadata>
+        <Identity Id="CppReferenceDocs.3007394a-12cc-40a7-9013-bbf63a441a1f"
+                  Version="1.0"
+                  Language="en-US"
+                  Publisher="Sal Sudano" />
+        <DisplayName>CPPReference Documentation Panel</DisplayName>
+        <Description>Adds a new dockable panel that will be populated with all cppreference matches to the selected symbol (C and C++ only) NEW.</Description>
+        <Preview>true</Preview>
+    </Metadata>
+    <Installation ExtensionType="VSSDK+VisualStudio.Extensibility">
+        <InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[17.9, 18.0)">
+            <ProductArchitecture>amd64</ProductArchitecture>
+        </InstallationTarget>
+        <InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[17.9, 18.0)">
+            <ProductArchitecture>arm64</ProductArchitecture>
+        </InstallationTarget>
+    </Installation>
+    <Dependencies>
+        <Dependency Id="Microsoft.Framework.NDP" DisplayName="Microsoft .NET Framework" d:Source="Manual" Version="[4.5,)" />
+    </Dependencies>
+    <Prerequisites>
+        <Prerequisite Id="Microsoft.VisualStudio.Component.CoreEditor" Version="[17.0,18.0)" DisplayName="Visual Studio core editor" />
+    </Prerequisites>
+</PackageManifest>

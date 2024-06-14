@@ -1,24 +1,34 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.10.34928.147
+VisualStudioVersion = 17.10.35004.147
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CppReferenceDocs", "CppReferenceDocs\CppReferenceDocs.csproj", "{D6892AD8-FC2F-47FF-A2B2-19123BCE4C0F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CppReferenceDocs", "CppReferenceDocs\CppReferenceDocs.csproj", "{80BFCAD3-4842-463B-98CE-FFE26FC8D6E6}"
 EndProject
 Global
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {23362579-2331-4871-8C77-3F6BA8C73874}
+		SolutionGuid = {72D300D2-86D4-4CBE-8550-5407E68FE043}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{D6892AD8-FC2F-47FF-A2B2-19123BCE4C0F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D6892AD8-FC2F-47FF-A2B2-19123BCE4C0F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D6892AD8-FC2F-47FF-A2B2-19123BCE4C0F}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
-		{D6892AD8-FC2F-47FF-A2B2-19123BCE4C0F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D6892AD8-FC2F-47FF-A2B2-19123BCE4C0F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D6892AD8-FC2F-47FF-A2B2-19123BCE4C0F}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{80BFCAD3-4842-463B-98CE-FFE26FC8D6E6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{80BFCAD3-4842-463B-98CE-FFE26FC8D6E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{80BFCAD3-4842-463B-98CE-FFE26FC8D6E6}.Debug|arm64.ActiveCfg = Debug|arm64
+		{80BFCAD3-4842-463B-98CE-FFE26FC8D6E6}.Debug|arm64.Build.0 = Debug|arm64
+		{80BFCAD3-4842-463B-98CE-FFE26FC8D6E6}.Debug|x86.ActiveCfg = Debug|x86
+		{80BFCAD3-4842-463B-98CE-FFE26FC8D6E6}.Debug|x86.Build.0 = Debug|x86
+		{80BFCAD3-4842-463B-98CE-FFE26FC8D6E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{80BFCAD3-4842-463B-98CE-FFE26FC8D6E6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{80BFCAD3-4842-463B-98CE-FFE26FC8D6E6}.Release|arm64.ActiveCfg = Release|arm64
+		{80BFCAD3-4842-463B-98CE-FFE26FC8D6E6}.Release|arm64.Build.0 = Release|arm64
+		{80BFCAD3-4842-463B-98CE-FFE26FC8D6E6}.Release|x86.ActiveCfg = Release|x86
+		{80BFCAD3-4842-463B-98CE-FFE26FC8D6E6}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
+		Debug|arm64 = Debug|arm64
+		Debug|x86 = Debug|x86
 		Release|Any CPU = Release|Any CPU
+		Release|arm64 = Release|arm64
+		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

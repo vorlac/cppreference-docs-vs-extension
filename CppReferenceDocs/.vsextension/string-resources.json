@@ -1,3 +1,4 @@
 {
-  "CppReferenceDocs.ShowDocsPanelCommand.DisplayName": "Show C/C++ Documentation Panel"
+    "CppReferenceDocs.ShowDialogCommand.DisplayName": "Open Example Dialog",
+    "CppReferenceDocs.ShowDocsToolWindowCommand.DisplayName": "Show C/C++ Documentation Panel"
 }

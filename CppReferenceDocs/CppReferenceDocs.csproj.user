@@ -7,4 +7,9 @@
   <PropertyGroup>
     <ActiveDebugProfile>CppReferenceDocs</ActiveDebugProfile>
   </PropertyGroup>
+  <ItemGroup>
+    <EmbeddedResource Update="ToolWindows\CppReferenceToolWindowContent.xaml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
 </Project>

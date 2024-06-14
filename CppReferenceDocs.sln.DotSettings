@@ -4,7 +4,11 @@
 	<s:Boolean x:Key="/Default/CodeStyle/CodeCleanup/SaveAfterCleanup/@EntryValue">True</s:Boolean>
 	<s:String x:Key="/Default/CodeStyle/CodeCleanup/SilentCleanupProfile/@EntryValue">Built-in: Reformat Code</s:String>
 	<s:Boolean x:Key="/Default/CodeStyle/CodeFormatting/CommonFormatter/ENFORCE_LINE_ENDING_STYLE/@EntryValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/CodeStyle/EditorConfig/EnableClangFormatSupport/@EntryValue">False</s:Boolean>
 	<s:Boolean x:Key="/Default/Environment/AIAssistantOptions/IsAccessToCodeEnabled/@EntryValue">False</s:Boolean>
 	<s:Boolean x:Key="/Default/Environment/AIAssistantOptions/IsContextActionsEnabled/@EntryValue">False</s:Boolean>
 	<s:Boolean x:Key="/Default/Environment/AIAssistantOptions/IsContextSlidingWindowEnabled/@EntryValue">False</s:Boolean>
-	<s:Boolean x:Key="/Default/Environment/GrayCodeCompletion/IsEnabled/@EntryValue">False</s:Boolean></wpf:ResourceDictionary>
+	<s:Boolean x:Key="/Default/Environment/GrayCodeCompletion/IsEnabled/@EntryValue">False</s:Boolean>
+	<s:Int64 x:Key="/Default/Environment/Hierarchy/Build/BuildTool/MsBuildSolutionLoadingNodeCount/@EntryValue">16</s:Int64>
+	<s:String x:Key="/Default/Environment/Hierarchy/Build/SolBuilderDuo/UseMsbuildSolutionBuilder/@EntryValue">NewVersion</s:String>
+	<s:Boolean x:Key="/Default/UserDictionary/Words/=vsextension/@EntryIndexedValue">True</s:Boolean></wpf:ResourceDictionary>

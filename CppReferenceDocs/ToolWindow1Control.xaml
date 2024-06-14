@@ -1,21 +1,19 @@
-﻿<UserControl x:Class="CppReferenceDocs.ToolWindow1Control"
+﻿<UserControl
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:vsshell="clr-namespace:Microsoft.VisualStudio.Shell;assembly=Microsoft.VisualStudio.Shell.15.0"
              xmlns:wpf="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
+             xmlns:Shell="clr-namespace:Microsoft.Internal.VisualStudio.Shell;assembly=Microsoft.VisualStudio.Shell.15.0" x:Class="CppReferenceDocs.ToolWindow1Control"
              Background="{DynamicResource {x:Static vsshell:VsBrushes.WindowKey}}"
              Foreground="{DynamicResource {x:Static vsshell:VsBrushes.WindowTextKey}}"
-             mc:Ignorable="d"
-             d:DesignHeight="600"
-        d:DesignWidth="800">
+             mc:Ignorable="d" d:DesignHeight="600" d:DesignWidth="800">
     <DockPanel x:Name="WindowBodyPanel"
                Background="Bisque"
                HorizontalAlignment="Stretch"
                VerticalAlignment="Stretch"
-               Width="Auto"
-            Height="Auto"
+               Width="Auto" Height="Auto"
                LayoutUpdated="OnWindowResize">
         <DockPanel DockPanel.Dock="Top"
                    Height="25"
@@ -31,29 +29,32 @@
                      HorizontalContentAlignment="Stretch"
                      VerticalContentAlignment="Center"
                      FontSize="14"
-                    FontStretch="Medium"
-                     KeyDown="OnSearchButtonPressed"
+                     FontStretch="Medium"
+                     KeyDown="OnSearchBtnPressed"
                      Panel.ZIndex="1"
                      Cursor="IBeam"
                      Text="https://www.cppreference.com"
                      BorderThickness="0,1,0,1"/>
-            <Button x:Name="SearchButton"
+            <Button x:Name="SearchBtn"
                     Padding="10,0,10,0"
                     DockPanel.Dock="Right"
+                    IsEnabled="True"
+                    Width="60" Height="Auto"
                     HorizontalAlignment="Right"
-                    Click="OnSearchButtonPressed"
-                    Width="60"
-                    Height="Auto"
-                    HorizontalContentAlignment="Center">
-                Search
-            </Button>
+                    HorizontalContentAlignment="Center"
+                    Click="OnSearchBtnPressed"
+                    Content="Search"/>
         </DockPanel>
         <wpf:WebView2 x:Name="WebView"
                       DockPanel.Dock="Bottom"
                       HorizontalAlignment="Stretch"
                       VerticalAlignment="Stretch"
-                      Height="Auto"
-                Width="Auto"
-                      SourceChanged="OnWebViewSourceChanged"/>
+                      Height="Auto" Width="Auto"/>
+                      <!--CacheMode="Disabled"-->
+                      <!--Source="https://www.cppreference.com"-->
+                      <!--CreationProperties="{Binding CreationProperties.UserDataFolder, ElementName=WebView}" AllowExternalDrop="False">-->
+        <!--</wpf:WebView2>-->
+        <!--SourceUpdated="OnSearchBtnPressed"-->
+        <!--SourceChanged="OnWebViewSourceChanged"-->
     </DockPanel>
 </UserControl>

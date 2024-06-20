@@ -10,9 +10,6 @@ using Serilog.Formatting.Display;
 
 namespace CppReferenceDocsExtension.Utils
 {
-    /// <summary>
-    /// A serilog sink that writes logs to the VS output window in a dedicated section.
-    /// </summary>
     internal sealed class OutputPaneEventSink : ILogEventSink
     {
         private static readonly Guid s_paneGuid = new Guid("8851EA3E-6283-4C9A-B31B-97D26037E6D3");
@@ -24,7 +21,7 @@ namespace CppReferenceDocsExtension.Utils
             ThreadHelper.ThrowIfNotOnUIThread();
 
             _formatter = new MessageTemplateTextFormatter(outputTemplate, null);
-            _ = ErrorHandler.ThrowOnFailure(outputWindow.CreatePane(s_paneGuid, "Web Browser Extension", 1, 1));
+            _ = ErrorHandler.ThrowOnFailure(outputWindow.CreatePane(s_paneGuid, Constants.ExtensionName, 1, 1));
             _ = outputWindow.GetPane(s_paneGuid, out _pane);
         }
 

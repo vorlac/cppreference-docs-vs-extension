@@ -2,6 +2,6 @@
 {
     internal static class Constants
     {
-        public const string ExtensionName = "Web Browser";
+        public const string ExtensionName = "CppReferenceDocsPanel";
     }
 }

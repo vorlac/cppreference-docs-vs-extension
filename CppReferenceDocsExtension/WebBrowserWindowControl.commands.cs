@@ -20,7 +20,7 @@ namespace CppReferenceDocsExtension
 
         // BrowseBack
         private /*async*/ void BrowseBackCmdCanExecute(object sender, CanExecuteRoutedEventArgs e) =>
-            e.CanExecute = !isNavigating && (webView?.CoreWebView2?.CanGoBack ?? false);
+            e.CanExecute = !_isNavigating && (webView?.CoreWebView2?.CanGoBack ?? false);
 
         private void BrowseBackCmdExecuted(object target, ExecutedRoutedEventArgs e)
         {
@@ -37,7 +37,7 @@ namespace CppReferenceDocsExtension
 
         // BrowseForward
         private void BrowseForwardCmdCanExecute(object sender, CanExecuteRoutedEventArgs e) =>
-            e.CanExecute = !isNavigating && (webView?.CoreWebView2?.CanGoForward ?? false);
+            e.CanExecute = !_isNavigating && (webView?.CoreWebView2?.CanGoForward ?? false);
 
         private void BrowseForwardCmdExecuted(object target, ExecutedRoutedEventArgs e)
         {
@@ -54,7 +54,7 @@ namespace CppReferenceDocsExtension
 
         // Refresh
         private void RefreshCmdCanExecute(object sender, CanExecuteRoutedEventArgs e) =>
-            e.CanExecute = !isNavigating && webView?.CoreWebView2 != null;
+            e.CanExecute = !_isNavigating && webView?.CoreWebView2 != null;
 
         private void RefreshCmdExecuted(object target, ExecutedRoutedEventArgs e)
         {
@@ -71,7 +71,7 @@ namespace CppReferenceDocsExtension
 
         // BrowseHome
         private void BrowseHomeCmdCanExecute(object sender, CanExecuteRoutedEventArgs e) =>
-            e.CanExecute = !isNavigating && webView?.CoreWebView2 != null;
+            e.CanExecute = !_isNavigating && webView?.CoreWebView2 != null;
 
         private async void BrowseHomeCmdExecuted(object target, ExecutedRoutedEventArgs e)
         {
@@ -88,14 +88,14 @@ namespace CppReferenceDocsExtension
 
         // GoToPage
         private void GoToPageCmdCanExecute(object sender, CanExecuteRoutedEventArgs e) =>
-            e.CanExecute = !isNavigating && webView?.CoreWebView2 != null;
+            e.CanExecute = !_isNavigating && webView?.CoreWebView2 != null;
 
         private async void GoToPageCmdExecuted(object target, ExecutedRoutedEventArgs e)
         {
             Log.Verbose($"Navigating to '{e.Parameter ?? "<null>"}'");
             try
             {
-                var uri = UriHelper.MakeUri((string)e.Parameter);
+                Uri uri = UriHelper.MakeUri((string)e.Parameter);
                 await NavigateToAsync(uri);
             }
             catch (Exception ex)

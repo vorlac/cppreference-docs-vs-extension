@@ -20,11 +20,11 @@ namespace CppReferenceDocsExtension
     // * https://github.com/MicrosoftEdge/WebView2Samples/blob/master/SampleApps/WebView2WpfBrowser/README.md
     public partial class WebBrowserWindowControl : UserControl
     {
-        private readonly ILogger log = Log.Logger;
-        private readonly List<CoreWebView2Frame> webViewFrames = new List<CoreWebView2Frame>();
-        private CoreWebView2Environment environment;
-        private bool isNavigating = false;
-        private bool isFirstTimeLoad = true;
+        private readonly ILogger _log = Log.Logger;
+        private readonly List<CoreWebView2Frame> _webViewFrames = new List<CoreWebView2Frame>();
+        private CoreWebView2Environment _environment;
+        private bool _isNavigating = false;
+        private bool _isFirstTimeLoad = true;
 
         public WebBrowserWindowControl()
         {
@@ -76,10 +76,12 @@ namespace CppReferenceDocsExtension
             try
             {
                 // See https://github.com/MicrosoftEdge/WebView2Feedback/issues/271
-                var userDataFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "VS2022WebBrowserExtension");
-                environment = await CoreWebView2Environment.CreateAsync(null, userDataFolder);
+                string userDataFolder =
+                    Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                        "VS2022WebBrowserExtension");
+                _environment = await CoreWebView2Environment.CreateAsync(null, userDataFolder);
 
-                await webView.EnsureCoreWebView2Async(environment);
+                await webView.EnsureCoreWebView2Async(_environment);
             }
             catch (Exception ex)
             {
@@ -96,27 +98,30 @@ namespace CppReferenceDocsExtension
 
         private void OnNavigationStarting(object sender, CoreWebView2NavigationStartingEventArgs e)
         {
-            Log.Verbose($"{e.NavigationId} - Navigation Started. Uri: {e.Uri}, User Initiated: {e.IsUserInitiated}, Redirected: {e.IsRedirected}");
-            isNavigating = true;
+            Log.Verbose(
+                $"{e.NavigationId} - Navigation Started. Uri: {e.Uri}, User Initiated: {e.IsUserInitiated}, Redirected: {e.IsRedirected}");
+            _isNavigating = true;
             RequeryCommands();
         }
 
         private void OnNavigationCompleted(object sender, CoreWebView2NavigationCompletedEventArgs e)
         {
-            var status = e.HttpStatusCode.ToString();
+            string status = e.HttpStatusCode.ToString();
             if (e.WebErrorStatus != CoreWebView2WebErrorStatus.Unknown)
                 status += $" ({e.WebErrorStatus})";
 
             Log.Verbose($"{e.NavigationId} - Navigation Completed. Status: {status}");
-            isNavigating = false;
+            _isNavigating = false;
             RequeryCommands();
         }
 
-        private void OnCoreWebView2InitializationCompleted(object sender, CoreWebView2InitializationCompletedEventArgs e)
+        private void OnCoreWebView2InitializationCompleted(object sender,
+            CoreWebView2InitializationCompletedEventArgs e)
         {
             if (!e.IsSuccess)
             {
-                HandleError($"WebView2 creation failed: {e.InitializationException.Message}", e.InitializationException);
+                HandleError($"WebView2 creation failed: {e.InitializationException.Message}",
+                    e.InitializationException);
                 return;
             }
 
@@ -130,12 +135,12 @@ namespace CppReferenceDocsExtension
 
         private void OnWebViewHandleIFrames(object sender, CoreWebView2FrameCreatedEventArgs args)
         {
-            webViewFrames.Add(args.Frame);
+            _webViewFrames.Add(args.Frame);
             args.Frame.Destroyed += (frameDestroyedSender, frameDestroyedArgs) =>
             {
-                var frameToRemove = webViewFrames.SingleOrDefault(r => r.IsDestroyed() == 1);
+                CoreWebView2Frame frameToRemove = _webViewFrames.SingleOrDefault(r => r.IsDestroyed() == 1);
                 if (frameToRemove != null)
-                    _ = webViewFrames.Remove(frameToRemove);
+                    _ = _webViewFrames.Remove(frameToRemove);
             };
         }
 
@@ -144,14 +149,16 @@ namespace CppReferenceDocsExtension
             try
             {
                 const int defaultMarginX = 75, defaultMarginY = 0;
-                var cornerAlignment = CoreWebView2DefaultDownloadDialogCornerAlignment.TopLeft;
-                var margin = new SD.Point(defaultMarginX, defaultMarginY);
+                CoreWebView2DefaultDownloadDialogCornerAlignment cornerAlignment =
+                    CoreWebView2DefaultDownloadDialogCornerAlignment.TopLeft;
+                SD.Point margin = new SD.Point(defaultMarginX, defaultMarginY);
                 webView.CoreWebView2.DefaultDownloadDialogCornerAlignment = cornerAlignment;
                 webView.CoreWebView2.DefaultDownloadDialogMargin = margin;
             }
             catch (NotImplementedException ex)
             {
-                Log.Verbose(ex, $"In {nameof(SetDefaultDownloadDialogPosition)}, encountered {nameof(NotImplementedException)}: {ex.Message}");
+                Log.Verbose(ex,
+                    $"In {nameof(SetDefaultDownloadDialogPosition)}, encountered {nameof(NotImplementedException)}: {ex.Message}");
             }
         }
 
@@ -175,10 +182,10 @@ namespace CppReferenceDocsExtension
                 // parent control.
                 rightFiller.Width = rightFiller.Width == 1.0 ? 0.0 : 1.0;
 
-                if (isFirstTimeLoad)
+                if (_isFirstTimeLoad)
                 {
                     Log.Verbose($"First time Load: navigate to Home Page");
-                    isFirstTimeLoad = false;
+                    _isFirstTimeLoad = false;
                     await NavigateToHomeAsync();
                 }
             }
@@ -203,8 +210,8 @@ namespace CppReferenceDocsExtension
         {
             try
             {
-                var settings = GetService<IWebBrowserSettings>();
-                var homepage = settings.GetHomePageUri();
+                IWebBrowserSettings settings = GetService<IWebBrowserSettings>();
+                Uri homepage = settings.GetHomePageUri();
                 Log.Verbose($"Home Page Uri is '{homepage}'");
                 await NavigateToAsync(homepage);
             }

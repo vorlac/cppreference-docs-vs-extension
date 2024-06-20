@@ -11,30 +11,30 @@ namespace CppReferenceDocsExtension
     [ComVisible(true), Guid("6a23a02d-5801-4562-b257-b58370eb4e32")]
     public sealed class WebBrowserOptionsPage : UIElementDialogPage
     {
-        private readonly ILogger log = Log.Logger;
-        private WebBrowserOptionsPageControl control;
+        private readonly ILogger _log = Log.Logger;
+        private WebBrowserOptionsPageControl _control;
 
-        protected override UIElement Child => control ?? (control = new WebBrowserOptionsPageControl());
+        protected override UIElement Child => _control ?? (_control = new WebBrowserOptionsPageControl());
 
         protected override void OnActivate(CancelEventArgs e)
         {
-            log.Debug($"{nameof(WebBrowserOptionsPage)}: OnActivate(Cancel: {e.Cancel})");
+            _log.Debug($"{nameof(WebBrowserOptionsPage)}: OnActivate(Cancel: {e.Cancel})");
             base.OnActivate(e);
-            control.Settings = Site.GetService<IWebBrowserSettings>();
+            _control.Settings = Site.GetService<IWebBrowserSettings>();
         }
 
         public override void LoadSettingsFromStorage()
         {
-            log.Debug($"{nameof(WebBrowserOptionsPage)}: LoadSettingFromStorage()");
+            _log.Debug($"{nameof(WebBrowserOptionsPage)}: LoadSettingFromStorage()");
             base.LoadSettingsFromStorage();
-            control?.Settings?.Load();
+            _control?.Settings?.Load();
         }
 
         public override void SaveSettingsToStorage()
         {
-            log.Debug($"{nameof(WebBrowserOptionsPage)}: SaveSettingsToStorage()");
+            _log.Debug($"{nameof(WebBrowserOptionsPage)}: SaveSettingsToStorage()");
             base.SaveSettingsToStorage();
-            control?.Settings?.Save();
+            _control?.Settings?.Save();
         }
     }
 }

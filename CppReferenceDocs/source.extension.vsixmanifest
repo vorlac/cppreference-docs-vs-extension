@@ -2,26 +2,19 @@
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011"
     xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
     <Metadata>
-        <Identity Id="CppReferenceDocs.347bffbf-9ba8-457d-b03a-31820c179db4" Version="1.0"
-            Language="en-US" Publisher="sal" />
-        <DisplayName>CppReferenceDocs</DisplayName>
-        <Description>Empty VSIX Project.</Description>
+        <Identity Id="CppReferenceDocsExtension.60aaa690-b427-4817-a811-a65a1a81bea5"
+            Version="0.0.4" Language="en-US" Publisher="Sal Sudano" />
+        <DisplayName>CppReferenceDocsExtension</DisplayName>
+        <Description xml:space="preserve">Adds a cppreference.com documentation panel for the symbol actively selected by the cursor (C/C++ only).</Description>
+        <Icon>Resources\cpp_logo.ico</Icon>
+        <PreviewImage>Resources\cpp_logo.ico</PreviewImage>
+        <Preview>true</Preview>
     </Metadata>
     <Installation>
-        <InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[16.0, 18.0)">
-            <ProductArchitecture>amd64</ProductArchitecture>
-        </InstallationTarget>
-        <InstallationTarget Version="[16.0,18.0)" Id="Microsoft.VisualStudio.Pro">
-            <ProductArchitecture>amd64</ProductArchitecture>
-        </InstallationTarget>
-        <InstallationTarget Version="[16.0,18.0)" Id="Microsoft.VisualStudio.Enterprise">
+        <InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[17.0, 18.0)">
             <ProductArchitecture>amd64</ProductArchitecture>
         </InstallationTarget>
     </Installation>
-    <Dependencies>
-        <Dependency Id="Microsoft.Framework.NDP" DisplayName="Microsoft .NET Framework"
-            d:Source="Manual" Version="[4.5,)" />
-    </Dependencies>
     <Prerequisites>
         <Prerequisite Id="Microsoft.VisualStudio.Component.CoreEditor" Version="[17.0,18.0)"
             DisplayName="Visual Studio core editor" />
@@ -29,5 +22,7 @@
     <Assets>
         <Asset Type="Microsoft.VisualStudio.VsPackage" d:Source="Project"
             d:ProjectName="%CurrentProject%" Path="|%CurrentProject%;PkgdefProjectOutputGroup|" />
+        <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project"
+            d:ProjectName="%CurrentProject%" Path="|%CurrentProject%|" />
     </Assets>
 </PackageManifest>

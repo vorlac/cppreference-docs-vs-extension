@@ -5,7 +5,7 @@ using EnvDTE;
 using Microsoft.VisualStudio.Shell;
 using Serilog;
 
-namespace CppReferenceDocsExtension
+namespace CppReferenceDocsExtension.Commands
 {
     internal sealed class WebBrowserCommand
     {

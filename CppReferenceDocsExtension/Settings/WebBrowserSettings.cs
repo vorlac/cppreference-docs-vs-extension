@@ -14,11 +14,13 @@ namespace CppReferenceDocsExtension.Settings
     [Export(typeof(IWebBrowserSettings))]
     public sealed class WebBrowserSettings : IWebBrowserSettings
     {
-        private const string DefaultHomePage = "https://www.cppreference.com/";
+        private const string DefaultHomePage = @"https://www.cppreference.com/";
         private const string SettingsKey = nameof(WebBrowserSettings);
-
         private readonly ILogger _log = Log.Logger;
+
         private readonly WritableSettingsStore _settingsStore;
+        private LogEventLevel _minimumLogLevel;
+        private string _homePage;
 
         [ImportingConstructor]
         public WebBrowserSettings(SVsServiceProvider vsServiceProvider)
@@ -28,25 +30,18 @@ namespace CppReferenceDocsExtension.Settings
                 ShellSettingsManager manager = new ShellSettingsManager(vsServiceProvider);
                 _settingsStore = manager.GetWritableSettingsStore(SettingsScope.UserSettings);
                 if (_settingsStore == null)
-                    _log.Error(
-                        $"{nameof(WebBrowserSettings)} Constructor: could not retrieve an instance of {nameof(WritableSettingsStore)}");
+                    _log.Error($"{nameof(WebBrowserSettings)} Constructor: could not retrieve an instance of {nameof(WritableSettingsStore)}");
             }
             catch (Exception ex)
             {
-                _log.Error(ex,
-                    $"{nameof(WebBrowserSettings)} Constructor: could not retrieve an instance of {nameof(WritableSettingsStore)}");
+                _log.Error(ex, $"{nameof(WebBrowserSettings)} Constructor: could not retrieve an instance of {nameof(WritableSettingsStore)}");
             }
 
-            // Defaults
             _homePage = DefaultHomePage;
             _minimumLogLevel = LogEventLevel.Verbose;
 
             Load();
         }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        private string _homePage;
 
         public string HomePage
         {
@@ -54,22 +49,21 @@ namespace CppReferenceDocsExtension.Settings
             set => Set(ref _homePage, value);
         }
 
-        private LogEventLevel _minimumLogLevel;
-
         public LogEventLevel MinimumLogLevel
         {
             get => _minimumLogLevel;
             set => Set(ref _minimumLogLevel, value);
         }
 
+        public event PropertyChangedEventHandler PropertyChanged;
+
         public void Load()
         {
             try
             {
-                // NB: the stored url can be intentionally empty, meaning the user wished to open the browser with a blank page
                 HomePage = _settingsStore.GetString(SettingsKey, nameof(HomePage), DefaultHomePage) ?? "";
-                MinimumLogLevel = (LogEventLevel)_settingsStore.GetInt32(SettingsKey, nameof(MinimumLogLevel),
-                    (int)LogEventLevel.Information);
+                int logEventLevel = _settingsStore.GetInt32(SettingsKey, nameof(MinimumLogLevel), (int)LogEventLevel.Information);
+                MinimumLogLevel = (LogEventLevel)logEventLevel;
             }
             catch (Exception ex)
             {
@@ -95,7 +89,9 @@ namespace CppReferenceDocsExtension.Settings
 
         private bool Set<T>(ref T target, T value, [CallerMemberName] string propName = null)
         {
-            if (EqualityComparer<T>.Default.Equals(target, value)) return false;
+            if (EqualityComparer<T>.Default.Equals(target, value))
+                return false;
+
             target = value;
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
             return true;

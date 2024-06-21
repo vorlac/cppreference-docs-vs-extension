@@ -1,10 +1,11 @@
-﻿using System.Runtime.InteropServices;
-using EnvDTE;
+﻿using Constants = CppReferenceDocsExtension.Core.Constants;
+using System.Runtime.InteropServices;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.Web.WebView2.Wpf;
 using Serilog;
+using EnvDTE;
 
 namespace CppReferenceDocsExtension
 {
@@ -20,11 +21,13 @@ namespace CppReferenceDocsExtension
         {
             Caption = Constants.ExtensionName;
             _control = new WebBrowserWindowControl { SetTitleAction = x => Caption = x };
+
             Content = _control;
             _webView = _control.webView;
 
-            // Retrieve DTE and listen to "Visual Studio Shutdown" event
             ThreadHelper.ThrowIfNotOnUIThread();
+
+            // Retrieve DTE and listen to "Visual Studio Shutdown" event
             _dte = (DTE)Microsoft.VisualStudio.Shell.Package.GetGlobalService(typeof(DTE));
             _dte.Events.DTEEvents.OnBeginShutdown += OnVisualStudioShutDown;
         }
@@ -55,13 +58,10 @@ namespace CppReferenceDocsExtension
             CleanupControl();
         }
 
-        // Not sure if this is necessary. It seems VS takes care of the cleaning up 
-        // Never mind, let's keep it that way for now...
         private void CleanupControl()
         {
             _log.Debug("Cleaning up the Web Browser control instance");
-            if (_webView != null)
-                _webView.Dispose();
+            _webView?.Dispose();
         }
     }
 }

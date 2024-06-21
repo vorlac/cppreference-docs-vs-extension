@@ -8,7 +8,7 @@ using Serilog.Events;
 using Serilog.Formatting;
 using Serilog.Formatting.Display;
 
-namespace CppReferenceDocsExtension.Utils
+namespace CppReferenceDocsExtension.Core.Utils
 {
     internal sealed class OutputPaneEventSink : ILogEventSink
     {
@@ -32,7 +32,6 @@ namespace CppReferenceDocsExtension.Utils
             string message = sw.ToString();
 
             ThreadHelper.ThrowIfNotOnUIThread();
-
             if (_pane is IVsOutputWindowPaneNoPump noPump)
                 noPump.OutputStringNoPump(message);
             else

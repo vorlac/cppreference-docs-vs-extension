@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel;
 using System.Runtime.InteropServices;
 using System.Windows;
+using CppReferenceDocsExtension.Core.Utils;
 using CppReferenceDocsExtension.Settings;
-using CppReferenceDocsExtension.Utils;
 using Microsoft.VisualStudio.Shell;
 using Serilog;
 

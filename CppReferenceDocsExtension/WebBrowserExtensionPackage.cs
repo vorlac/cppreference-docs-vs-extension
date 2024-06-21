@@ -2,13 +2,15 @@
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
+using CppReferenceDocsExtension.Commands;
+using CppReferenceDocsExtension.Core.Utils;
 using CppReferenceDocsExtension.Settings;
-using CppReferenceDocsExtension.Utils;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using Serilog;
 using Serilog.Core;
 using Serilog.Events;
+using Constants = CppReferenceDocsExtension.Core.Constants;
 
 namespace CppReferenceDocsExtension
 {

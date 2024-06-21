@@ -4,7 +4,7 @@ using Microsoft.VisualStudio.ComponentModelHost;
 using Microsoft.VisualStudio.Shell;
 using Serilog;
 
-namespace CppReferenceDocsExtension.Utils
+namespace CppReferenceDocsExtension.Core.Utils
 {
     internal static class ServiceHelper
     {
@@ -16,14 +16,14 @@ namespace CppReferenceDocsExtension.Utils
             {
                 ThreadHelper.ThrowIfNotOnUIThread();
                 IComponentModel componentModel = sp.GetService<SComponentModel, IComponentModel>();
+
                 T result = componentModel.GetService<T>();
                 Assumes.Present(result);
                 return result;
             }
             catch (Exception ex)
             {
-                s_log.Error(ex,
-                    $"{nameof(WebBrowserOptionsPage)}: Could not retrieve an instance of Service {typeof(T)}");
+                s_log.Error(ex, $"{nameof(WebBrowserOptionsPage)}: Could not retrieve an instance of Service {typeof(T)}");
                 throw;
             }
         }

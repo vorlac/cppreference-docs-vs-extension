@@ -1,6 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
-using CppReferenceDocsExtension.Utils;
+using CppReferenceDocsExtension.Core.Utils;
 using Serilog.Events;
 
 namespace CppReferenceDocsExtension.Settings

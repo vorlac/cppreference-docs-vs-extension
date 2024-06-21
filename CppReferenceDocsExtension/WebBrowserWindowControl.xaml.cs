@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CppReferenceDocsExtension.Core.Utils;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -7,17 +8,14 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using CppReferenceDocsExtension.Settings;
-using CppReferenceDocsExtension.Utils;
 using Microsoft.Web.WebView2.Core;
 using Microsoft.Web.WebView2.Wpf;
-using Serilog;
 using SD = System.Drawing;
+using Serilog;
+using WebViewAlignment = Microsoft.Web.WebView2.Core.CoreWebView2DefaultDownloadDialogCornerAlignment;
 
 namespace CppReferenceDocsExtension
 {
-    // Inspiration:
-    // * https://github.com/MicrosoftEdge/WebView2Samples/blob/master/GettingStartedGuides/WPF_GettingStarted/MainWindow.xaml.cs
-    // * https://github.com/MicrosoftEdge/WebView2Samples/blob/master/SampleApps/WebView2WpfBrowser/README.md
     public partial class WebBrowserWindowControl : UserControl
     {
         private readonly ILogger _log = Log.Logger;
@@ -32,7 +30,7 @@ namespace CppReferenceDocsExtension
             {
                 InitializeComponent();
                 InitializeAddressBar();
-                InitializeAsync();
+                InitializeWebView();
                 AttachControlEventHandlers(webView);
 
                 Loaded += WebBrowserWindowControl_Loaded;
@@ -54,10 +52,11 @@ namespace CppReferenceDocsExtension
             {
                 addressBar.PreviewMouseLeftButtonDown += (s, e) =>
                 {
-                    if (addressBar.IsKeyboardFocusWithin) return;
+                    if (addressBar.IsKeyboardFocusWithin)
+                        return;
 
-                    // If the textbox is not yet focused, give it the focus and
-                    // stop further processing of this click event.
+                    // If the textbox is not yet focused, give it focus
+                    // and stop further processing of this click event.
                     _ = addressBar.Focus();
                     e.Handled = true;
                 };
@@ -71,7 +70,7 @@ namespace CppReferenceDocsExtension
             }
         }
 
-        private async void InitializeAsync()
+        private async void InitializeWebView()
         {
             try
             {
@@ -85,7 +84,7 @@ namespace CppReferenceDocsExtension
             }
             catch (Exception ex)
             {
-                HandleError(nameof(InitializeAsync), ex);
+                HandleError(nameof(InitializeWebView), ex);
             }
         }
 
@@ -98,8 +97,7 @@ namespace CppReferenceDocsExtension
 
         private void OnNavigationStarting(object sender, CoreWebView2NavigationStartingEventArgs e)
         {
-            Log.Verbose(
-                $"{e.NavigationId} - Navigation Started. Uri: {e.Uri}, User Initiated: {e.IsUserInitiated}, Redirected: {e.IsRedirected}");
+            Log.Verbose($"{e.NavigationId} - Navigation Started. Uri: {e.Uri}, User Initiated: {e.IsUserInitiated}, Redirected: {e.IsRedirected}");
             _isNavigating = true;
             RequeryCommands();
         }
@@ -175,13 +173,8 @@ namespace CppReferenceDocsExtension
             Log.Verbose("Loaded Event Handler");
             try
             {
-                // Dirty Hack: this forces a Resize event on the webView. If we do not do that
-                // when the window is hidden then shown again, the web view is wrongly positioned:
-                // it seems it is drawn relatively to the screen and not its parent grid...
-                // By forcing a size change, the web view is correctly drawn relatively to its
-                // parent control.
-                rightFiller.Width = rightFiller.Width == 1.0 ? 0.0 : 1.0;
-
+                // Forcing a size change to make the web view correct its position on init.
+                rightFiller.Width = Math.Abs(rightFiller.Width - 1.0) < 0.001 ? 0.0 : 1.0;
                 if (_isFirstTimeLoad)
                 {
                     Log.Verbose($"First time Load: navigate to Home Page");
@@ -198,11 +191,10 @@ namespace CppReferenceDocsExtension
         private async Task NavigateToAsync(Uri uri)
         {
             await webView.EnsureCoreWebView2Async();
-
-            // Setting webView.Source will not trigger a navigation if the Source is the same
-            // as the previous Source. CoreWebView.Navigate() will always trigger a navigation.
+            // Setting webView.Source will not trigger a navigation
+            // if the Source is the same as the previous Source.
+            // CoreWebView.Navigate() will always trigger a navigation.
             webView.CoreWebView2.Navigate(uri.ToString());
-
             Log.Verbose($"Initiated Navigation to '{uri}'");
         }
 
@@ -210,7 +202,7 @@ namespace CppReferenceDocsExtension
         {
             try
             {
-                IWebBrowserSettings settings = GetService<IWebBrowserSettings>();
+                IWebBrowserSettings settings = GetService<Settings.IWebBrowserSettings>();
                 Uri homepage = settings.GetHomePageUri();
                 Log.Verbose($"Home Page Uri is '{homepage}'");
                 await NavigateToAsync(homepage);

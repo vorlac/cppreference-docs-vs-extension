@@ -1,4 +1,4 @@
-﻿namespace CppReferenceDocsExtension
+﻿namespace CppReferenceDocsExtension.Core
 {
     internal static class Constants
     {

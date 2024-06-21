@@ -1,15 +1,12 @@
 ﻿using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using CppReferenceDocsExtension.Utils;
+using CppReferenceDocsExtension.Core.Utils;
 using Microsoft.Web.WebView2.Core;
 using Serilog;
 
 namespace CppReferenceDocsExtension
 {
-    // Commands
-    [SuppressMessage("Usage", "VSTHRD100:Avoid async void methods", Justification = "Commands")]
     partial class WebBrowserWindowControl
     {
         private async Task<T> GetCoreWebView2ValueAsync<T>(Func<CoreWebView2, T> func)
@@ -18,10 +15,8 @@ namespace CppReferenceDocsExtension
             return func(webView.CoreWebView2);
         }
 
-        // BrowseBack
         private /*async*/ void BrowseBackCmdCanExecute(object sender, CanExecuteRoutedEventArgs e) =>
             e.CanExecute = !_isNavigating && (webView?.CoreWebView2?.CanGoBack ?? false);
-
         private void BrowseBackCmdExecuted(object target, ExecutedRoutedEventArgs e)
         {
             Log.Verbose($"Navigating Backward");
@@ -35,10 +30,8 @@ namespace CppReferenceDocsExtension
             }
         }
 
-        // BrowseForward
         private void BrowseForwardCmdCanExecute(object sender, CanExecuteRoutedEventArgs e) =>
             e.CanExecute = !_isNavigating && (webView?.CoreWebView2?.CanGoForward ?? false);
-
         private void BrowseForwardCmdExecuted(object target, ExecutedRoutedEventArgs e)
         {
             Log.Verbose($"Navigating Forward");
@@ -52,10 +45,8 @@ namespace CppReferenceDocsExtension
             }
         }
 
-        // Refresh
         private void RefreshCmdCanExecute(object sender, CanExecuteRoutedEventArgs e) =>
             e.CanExecute = !_isNavigating && webView?.CoreWebView2 != null;
-
         private void RefreshCmdExecuted(object target, ExecutedRoutedEventArgs e)
         {
             Log.Verbose($"Reloading Current Page");
@@ -69,10 +60,8 @@ namespace CppReferenceDocsExtension
             }
         }
 
-        // BrowseHome
         private void BrowseHomeCmdCanExecute(object sender, CanExecuteRoutedEventArgs e) =>
             e.CanExecute = !_isNavigating && webView?.CoreWebView2 != null;
-
         private async void BrowseHomeCmdExecuted(object target, ExecutedRoutedEventArgs e)
         {
             Log.Verbose($"Navigating to Home Page");
@@ -86,10 +75,8 @@ namespace CppReferenceDocsExtension
             }
         }
 
-        // GoToPage
         private void GoToPageCmdCanExecute(object sender, CanExecuteRoutedEventArgs e) =>
             e.CanExecute = !_isNavigating && webView?.CoreWebView2 != null;
-
         private async void GoToPageCmdExecuted(object target, ExecutedRoutedEventArgs e)
         {
             Log.Verbose($"Navigating to '{e.Parameter ?? "<null>"}'");

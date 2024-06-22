@@ -1,0 +1,517 @@
+﻿*
+
+INVERT
+.jfk-bubble.gtx-bubble
+.captcheck_answer_label > input + img
+span#closed_text > img[src^="https://www.gstatic.com/images/branding/googlelogo"]
+span[data-href^="https://www.hcaptcha.com/"] > #icon
+::-webkit-calendar-picker-indicator
+img.Wirisformula
+
+CSS
+.vimvixen-hint {
+    background-color: $ {
+        #ffd76e
+    }
+
+    !important;
+
+    border-color: $ {
+        #c59d00
+    }
+
+    !important;
+
+    color: $ {
+        #302505
+    }
+
+    !important;
+}
+
+#vimvixen-console-frame {
+    color-scheme: light !important;
+}
+
+::placeholder {
+    opacity: 0.5 !important;
+}
+
+#edge-translate-panel-body,
+.MuiTypography-body1,
+.nfe-quote-text {
+    color: var(--darkreader-neutral-text) !important;
+}
+
+gr-main-header {
+    background-color: $ {
+        lightblue
+    }
+
+    !important;
+}
+
+.tou-z65h9k,
+.tou-mignzq,
+.tou-1b6i2ox,
+.tou-lnqlqk {
+    background-color: var(--darkreader-neutral-background) !important;
+}
+
+.tou-75mvi {
+    background-color: $ {
+        rgb(207, 236, 245)
+    }
+
+    !important;
+}
+
+.tou-ta9e87,
+.tou-1w3fhi0,
+.tou-1b8t2us,
+.tou-py7lfi,
+.tou-1lpmd9d,
+.tou-1frrtv8,
+.tou-17ezmgn {
+    background-color: $ {
+        rgb(245, 245, 245)
+    }
+
+    !important;
+}
+
+.tou-uknfeu {
+    background-color: $ {
+        rgb(250, 237, 218)
+    }
+
+    !important;
+}
+
+.tou-6i3zyv {
+    background-color: $ {
+        rgb(133, 195, 216)
+    }
+
+    !important;
+}
+
+div.mermaid-viewer-control-panel .btn {
+    background-color: var(--darkreader-neutral-background);
+    fill: var(--darkreader-neutral-text);
+}
+
+svg g rect.er {
+    fill: var(--darkreader-neutral-background) !important;
+}
+
+svg g rect.er.entityBox {
+    fill: var(--darkreader-neutral-background) !important;
+}
+
+svg g rect.er.attributeBoxOdd {
+    fill: var(--darkreader-neutral-background) !important;
+}
+
+svg g rect.er.attributeBoxEven {
+    fill: var(--darkreader-selection-background);
+    fill-opacity: 0.8 !important;
+}
+
+svg rect.er.relationshipLabelBox {
+    fill: var(--darkreader-neutral-background) !important;
+}
+
+svg g g.nodes rect,
+svg g g.nodes polygon {
+    fill: var(--darkreader-neutral-background) !important;
+}
+
+svg g rect.task {
+    fill: var(--darkreader-selection-background) !important;
+}
+
+svg line.messageLine0,
+svg line.messageLine1 {
+    stroke: var(--darkreader-neutral-text) !important;
+}
+
+div.mermaid .actor {
+    fill: var(--darkreader-neutral-background) !important;
+}
+
+.google-material-icons {
+    font-family: 'Google Material Icons' !important;
+}
+
+.google-symbols {
+    font-family: 'Google Symbols Subset', 'Google Symbols' !important;
+}
+
+.material-icons-extended {
+    font-family: 'Material Icons Extended' !important;
+}
+
+mitid-authenticators-code-app > .code-app-container {
+    background-color: white !important;
+    padding-top: 1rem;
+}
+
+iframe#unpaywall[src$="unpaywall.html"] {
+    color-scheme: light !important;
+}
+
+.oui-icon {
+    font-family: 'Oui Icons' !important;
+}
+
+IGNORE INLINE STYLE
+.sr-wrapper *
+.sr-reader *
+.diigoHighlight
+
+================================
+
+github.com
+github.*.*
+
+INVERT
+[src="https://github.githubassets.com/images/modules/site/icons/footer/github-logo.svg"]
+[src^="https://github.githubassets.com/images/modules/site/home/community-sponsor-"]
+[src^="https://github.githubassets.com/images/modules/site/home/community-readme-"]
+[src^="https://github.githubassets.com/images/modules/site/home/community-discussions-"]
+[src="https://github.githubassets.com/images/modules/site/home/dependabot-merge.png"]
+[src="https://github.githubassets.com/images/modules/site/home/dependabot-pr.png"]
+[src="https://github.githubassets.com/images/modules/site/home/gh-desktop.png"]
+[src="https://github.githubassets.com/images/modules/site/home/pr-merge.png"]
+[src="https://github.githubassets.com/images/modules/site/home/pr-comment.png"]
+[src="https://github.githubassets.com/images/modules/site/home/pr-description.png"]
+[src="https://github.githubassets.com/images/modules/site/home/pr-screen.png"]
+[src="https://github.githubassets.com/images/modules/site/home/enterprise-city-w-logos.jpg"]
+[src="https://github.githubassets.com/images/modules/site/codespaces/codespaces-icon.png"]
+[src="https://github.githubassets.com/images/modules/site/codespaces/dependency-rust.png"]
+[src="https://github.githubassets.com/images/modules/site/codespaces/dependency-3.png"]
+[src^="https://github.githubassets.com/images/modules/site/codespaces/dependencies-"]
+[src="https://github.githubassets.com/images/modules/site/codespaces/commit-3.png"]
+[src="https://github.githubassets.com/images/modules/site/codespaces/extensions-1.png"]
+[src="https://github.githubassets.com/images/modules/site/codespaces/extensions-2.png"]
+[src="https://github.githubassets.com/images/modules/site/codespaces/commit-workflow.png"]
+[src="https://github.githubassets.com/images/modules/site/codespaces/workflow-view.png"]
+[src="https://github.githubassets.com/images/modules/site/codespaces/code.png"]
+[src="https://github.githubassets.com/images/email/explore/explore-gradient-icon.png"]
+[src="https://raw.githubusercontent.com/github/explore/80688e429a7d4ef2fca1e82350fe8e3517d3494d/collections/learn-to-code/learn-to-code.png"]
+.js-viewport-aware-video.color-bg-primary.width-full.d-block.codespaces-hero-video
+.build-in-animate.position-relative.mb-6-fluid.box-shadow-active-mktg.mx-auto.home-mobile-iphone.build-in-slideY.js-build-in > .js-viewport-aware-video.width-full
+.overflow-hidden.position-relative.box-shadow-active-border-mktg.rounded-2-fluid.color-bg-primary.build-in-scale-fade.js-build-in-item
+.build-in-animate.overflow-hidden.box-shadow-active-border-mktg.rounded-2-fluid.position-relative.home-workflow-comp.js-build-in-item
+.mx-lg-auto.col-lg-7.col-12
+
+CSS
+.blob-code-inner,
+.blob-num,
+.cm-s-github-light .CodeMirror-lines,
+.CodeMirror pre > span,
+.CodeMirror,
+.CodeMirror-dialog input,
+.CodeMirror-hints,
+.CodeMirror-linenumber,
+.CodeMirror-lines,
+.commit .sha,
+.commit .sha-block,
+.commit-desc pre,
+.commit-ref,
+.commit-tease-sha,
+.export-phrase pre,
+.file-info,
+.FormControl-input.FormControl-monospace,
+.FormControl-select.FormControl-monospace,
+.FormControl-textarea.FormControl-monospace,
+.input-monospace,
+.markdown-body .footnotes .data-footnote-backref g-emoji,
+.pr-1 > code > a,
+.react-blob-print-hide,
+.react-code-text,
+.react-code-view-edit .cm-s-github-light .CodeMirror-lines,
+.text-mono *,
+.text-mono,
+.two-factor-recovery-codes,
+[aria-labelledby*="codemirror"] *,
+[class*="blob-code"] *,
+code > a[class="Link--secondary"],
+section[aria-labelledby] > div > div *,
+span.commit-ref > a > *,
+span.commit-ref > a {
+    font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace !important;
+}
+
+.markdown-body code,
+.markdown-title code {
+    background-color: $ {
+        rgba(27, 31, 35, 0.1)
+    }
+
+    !important;
+}
+
+.markdown-body pre code {
+    background-color: transparent !important;
+}
+
+.refined-github .dashboard .js-all-activity-header + div {
+    background-color: $ {
+        #e4e5e9
+    }
+
+    !important;
+
+    border-color: $ {
+        #bbc1c9
+    }
+
+    !important;
+}
+
+.refined-github .dashboard-rollup-items .body {
+    border-top-color: $ {
+        #bbc1c9
+    }
+
+    !important;
+}
+
+.refined-github .reaction-summary-item a {
+    box-shadow: 0 0 0 2px $ {
+        white
+    }
+
+    !important;
+}
+
+.refined-github button.reaction-summary-item {
+    border-bottom: rgb(77, 172, 253) !important;
+    border-top-color: rgb(52, 59, 68) !important;
+}
+
+.js-site-search-form {
+    background-color: #ffffff1a !important;
+    border-radius: 2pt !important;
+}
+
+.blob-num:not(.cc-coverage-covered-border):not(.cc-coverage-missed-border) {
+    border-right: 0 !important;
+}
+
+.cc-issue-description {
+    color: #24292e !important;
+}
+
+.cc-readup-background {
+    background-color: rgb(28, 30, 31) !important;
+}
+
+.cc-readup-content {
+    border-left: 1px solid grey !important;
+    color: rgb(216, 214, 208) !important;
+}
+
+.cc-readup-content blockquote {
+    border-left: 3px solid dimgrey !important;
+}
+
+.cc-pr__link-text {
+    color: darkgrey !important;
+}
+
+.cc-pr__tooltip {
+    background-color: rgb(28, 30, 31) !important;
+    color: darkgrey !important;
+}
+
+.jfk-bubble,
+.octotree-sidebar,
+.cc-pr__logo,
+.cc-octicon,
+#network canvas,
+img.network-tree {
+    filter: invert(94.4%) hue-rotate(180deg) contrast(90%) !important;
+}
+
+#commit-activity-detail > svg {
+    fill: $ {
+        black
+    }
+
+    !important;
+}
+
+.ContributionCalendar-day,
+.ContributionCalendar-day[data-level="0"] {
+    fill: var(--color-calendar-graph-day-bg) !important;
+}
+
+.ContributionCalendar-day[data-level="1"] {
+    fill: var(--color-calendar-graph-day-L1-bg) !important;
+}
+
+.ContributionCalendar-day[data-level="2"] {
+    fill: var(--color-calendar-graph-day-L2-bg) !important;
+}
+
+.ContributionCalendar-day[data-level="3"] {
+    fill: var(--color-calendar-graph-day-L3-bg) !important;
+}
+
+.ContributionCalendar-day[data-level="4"] {
+    fill: var(--color-calendar-graph-day-L4-bg) !important;
+}
+
+.day,
+.day[data-Count="0"] {
+    fill: var(--color-calendar-graph-day-bg) !important;
+}
+
+.day[data-Count="1"] {
+    fill: var(--color-calendar-graph-day-L1-bg) !important;
+}
+
+.day[data-Count="2"] {
+    fill: var(--color-calendar-graph-day-L2-bg) !important;
+}
+
+.day[data-Count="3"] {
+    fill: var(--color-calendar-graph-day-L3-bg) !important;
+}
+
+.day[data-Count="4"] {
+    fill: var(--color-calendar-graph-day-L4-bg) !important;
+}
+
+:root {
+    --color-calendar-graph-day-bg: ${#ebedf0} !important;
+    --color-calendar-graph-day-L1-bg: ${#9be9a8} !important;
+    --color-calendar-graph-day-L2-bg: ${#40c463} !important;
+    --color-calendar-graph-day-L3-bg: ${#30a14e} !important;
+    --color-calendar-graph-day-L4-bg: ${#216e39} !important;
+    --color-previewable-comment-form-bg: var(--darkreader-neutral-background) !important;
+}
+
+.Box-row--yellow {
+    background-color: $ {
+        #fffbdd
+    }
+
+    !important;
+}
+
+.merge-status-list {
+    border-color: $ {
+        #c0c5c7
+    }
+
+    !important;
+}
+
+.user-has-reacted {
+    background-color: rgba(17, 88, 199, 0.2) !important;
+}
+
+.hx_IssueLabel {
+    background: rgb(var(--label-r),var(--label-g),var(--label-b)) !important;
+    border-color: hsla(var(--label-h),calc(var(--label-s)*1%),calc((var(--label-l) - 25)*1%),var(--border-alpha)) !important;
+    color: hsl(0,0%,calc(var(--lightness-switch)*100%)) !important;
+}
+
+.header-search-input {
+    border: 0 !important;
+}
+
+.HeaderMenu-link--sign-in {
+    border: 0 !important;
+}
+
+.timeline-comment--caret.current-user::after {
+    --color-current-user-tip-bg: var(--darkreader-bg--color-box-bg-info) !important;
+}
+
+.timeline-comment--caret.current-user::before {
+    background-color: var(--darkreader-border--color-box-border-info) !important;
+}
+
+@media screen and (min-width: 1012px) {
+    markdown-toolbar.border-lg-top-0 {
+        border-top: 1px solid var(--darkreader-border--color-border-primary) !important;
+    }
+}
+
+@media screen and (max-width: 767px) {
+    div.tabnav--responsive button.tabnav-tab {
+        --color-border-primary: var(--darkreader-border--color-border-primary) !important;
+    }
+}
+
+.TimelineItem-badge[style^="background-color: var(--color-timeline-merged-bg)"] {
+    background-color: var(--color-timeline-merged-bg) !important;
+}
+
+.ContributionCalendar-label {
+    --color-text-primary: var(--darkreader-neutral-text) !important;
+}
+
+article div[style^="background: linear-gradient"] {
+    background: linear-gradient(to top, var(--darkreader-bg--color-bg-primary), transparent) !important;
+}
+
+.ͼ5 .cm-content,
+.ͼ5 .cm-panel.cm-search > button {
+    background-color: var(--darkreader-neutral-background) !important;
+}
+
+IGNORE INLINE STYLE
+a[href^="https://apps.apple.com/app/"] g
+a[href^="https://apps.apple.com/app/"] path
+tracked-issues-progress svg *
+div#user-repositories-list .tooltipped svg *
+div#org-repositories .tooltipped svg *
+
+================================
+
+gitlab.com
+gitlab.host
+gitlab.*.*
+gitlab.*.*.*
+code.videolan.org
+framagit.org
+git.fairkom.net
+repo1.dso.mil
+
+INVERT
+.js-contrib-calendar
+
+CSS
+:root {
+    --svg-status-bg: #181a1b;
+}
+
+.avatar,
+.avatar-container {
+    border: none !important;
+}
+
+table.code .line_content *:not(pre),
+.job-log *:not(pre) {
+    font-family: "Menlo", "DejaVu Sans Mono", "Liberation Mono", "Consolas", "Ubuntu Mono", "Courier New", "andale mono", "lucida console", monospace !important;
+}
+
+.gl-drawer-close-button,
+.js-reply-button,
+.dropdown.more-actions > button,
+.js-note-edit,
+.btn-default-tertiary,
+.btn-confirm-tertiary {
+    mix-blend-mode: unset !important;
+}
+
+.board-inner {
+    --darkreader-border--gray-100: ${#d1cdc7} !important;
+    --gray-10: ${#e1e3e4} !important;
+}

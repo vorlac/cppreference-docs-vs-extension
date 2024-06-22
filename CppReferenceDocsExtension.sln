@@ -4,6 +4,8 @@ VisualStudioVersion = 17.1.32210.238
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CppReferenceDocsExtension", "CppReferenceDocsExtension\CppReferenceDocsExtension.csproj", "{E2859467-784A-4EC0-9BA5-B1502C80F1F1}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DocumentationProcessor", "DocumentationProcessor\DocumentationProcessor.csproj", "{30A8926E-C2E5-4FFD-87D2-F3C0A6AFA1D6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,6 +14,14 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{30A8926E-C2E5-4FFD-87D2-F3C0A6AFA1D6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{30A8926E-C2E5-4FFD-87D2-F3C0A6AFA1D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{30A8926E-C2E5-4FFD-87D2-F3C0A6AFA1D6}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{30A8926E-C2E5-4FFD-87D2-F3C0A6AFA1D6}.Debug|x86.Build.0 = Debug|Any CPU
+		{30A8926E-C2E5-4FFD-87D2-F3C0A6AFA1D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{30A8926E-C2E5-4FFD-87D2-F3C0A6AFA1D6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{30A8926E-C2E5-4FFD-87D2-F3C0A6AFA1D6}.Release|x86.ActiveCfg = Release|Any CPU
+		{30A8926E-C2E5-4FFD-87D2-F3C0A6AFA1D6}.Release|x86.Build.0 = Release|Any CPU
 		{E2859467-784A-4EC0-9BA5-B1502C80F1F1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{E2859467-784A-4EC0-9BA5-B1502C80F1F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E2859467-784A-4EC0-9BA5-B1502C80F1F1}.Debug|x86.ActiveCfg = Debug|x86
@@ -20,21 +30,6 @@ Global
 		{E2859467-784A-4EC0-9BA5-B1502C80F1F1}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E2859467-784A-4EC0-9BA5-B1502C80F1F1}.Release|x86.ActiveCfg = Release|x86
 		{E2859467-784A-4EC0-9BA5-B1502C80F1F1}.Release|x86.Build.0 = Release|x86
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {DF426945-2D6E-4A1E-ADF5-30C417F75AB1}
-	EndGlobalSection
-EndGlobal
-.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C45A76D5-6B32-46A1-B39F-672F9ACDBBEF}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{C45A76D5-6B32-46A1-B39F-672F9ACDBBEF}.Debug|x86.Build.0 = Debug|Any CPU
-		{C45A76D5-6B32-46A1-B39F-672F9ACDBBEF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C45A76D5-6B32-46A1-B39F-672F9ACDBBEF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C45A76D5-6B32-46A1-B39F-672F9ACDBBEF}.Release|x86.ActiveCfg = Release|Any CPU
-		{C45A76D5-6B32-46A1-B39F-672F9ACDBBEF}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

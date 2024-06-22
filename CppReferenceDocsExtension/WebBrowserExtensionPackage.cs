@@ -12,8 +12,7 @@ using Serilog.Core;
 using Serilog.Events;
 using Constants = CppReferenceDocsExtension.Core.Constants;
 
-namespace CppReferenceDocsExtension
-{
+namespace CppReferenceDocsExtension {
     [Guid(PackageGuidString)]
     [PackageRegistration(UseManagedResourcesOnly = true, AllowsBackgroundLoading = true)]
     [InstalledProductRegistration("#110", "#112", "1.0", IconResourceID = 400)]
@@ -21,53 +20,41 @@ namespace CppReferenceDocsExtension
     [ProvideToolWindow(typeof(WebBrowserWindow))]
     [ProvideOptionPage(typeof(WebBrowserOptionsPage), Constants.ExtensionName, "General", 0, 0, true)]
     [ProvideProfile(typeof(WebBrowserOptionsPage), Constants.ExtensionName, "General", 0, 0, true)]
-    public sealed class WebBrowserExtensionPackage : AsyncPackage
-    {
+    public sealed class WebBrowserExtensionPackage : AsyncPackage {
         public const string PackageGuidString = "1ba34956-275f-48c6-889b-a8834db18c23";
 
-        /// <summary>
-        /// Initialization of the package; this method is called right after the package is sited, so this is the place
-        /// where you can put all the initialization code that relies on services provided by Visual Studio.
-        /// </summary>
-        /// <param name="cancellationToken">A cancellation token to monitor for initialization cancellation, which can occur when VS is shutting down.</param>
-        /// <param name="progress">A provider for progress updates.</param>
-        /// <returns>A task representing the async work of package initialization, or an already completed task if there is none. Do not return null from this method.</returns>
         protected override async Task InitializeAsync(CancellationToken cancellationToken,
-            IProgress<ServiceProgressData> progress)
-        {
+                                                      IProgress<ServiceProgressData> progress) {
             await base.InitializeAsync(cancellationToken, progress);
-            await JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
+            await this.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
 
-            InitializeLogging();
+            this.InitializeLogging();
             await WebBrowserCommand.InitializeAsync(this);
         }
 
-        private void InitializeLogging()
-        {
+        private void InitializeLogging() {
             const string format = "{Timestamp:HH:mm:ss.fff} [{Level}] {Pid} {Message}{NewLine}{Exception}";
-            IVsOutputWindow outputWindow = this.GetService<SVsOutputWindow, IVsOutputWindow>();
+            var outputWindow = this.GetService<SVsOutputWindow, IVsOutputWindow>();
 
-            LoggingLevelSwitch levelSwitch = new LoggingLevelSwitch { MinimumLevel = LogEventLevel.Verbose };
-            (Exception exception, string message) = (null, "");
-            try
-            {
-                IWebBrowserSettings settings = this.GetService<IWebBrowserSettings>();
+            var levelSwitch = new LoggingLevelSwitch { MinimumLevel = LogEventLevel.Verbose };
+            (Exception exception, var message) = (null, "");
+            try {
+                var settings = this.GetService<IWebBrowserSettings>();
                 levelSwitch.MinimumLevel = settings.MinimumLogLevel;
                 settings.PropertyChanged += (s, e) => levelSwitch.MinimumLevel = settings.MinimumLogLevel;
             }
-            catch (Exception ex)
-            {
+            catch (Exception ex) {
                 exception = ex;
                 message =
-                    $"{nameof(WebBrowserExtensionPackage)}.{nameof(InitializeLogging)}(): Could not retrieve Logging Configuration";
+                    $"{nameof(WebBrowserExtensionPackage)}.{nameof(this.InitializeLogging)}(): Could not retrieve Logging Configuration";
             }
 
-            OutputPaneEventSink sink = new OutputPaneEventSink(outputWindow, outputTemplate: format);
+            var sink = new OutputPaneEventSink(outputWindow, format);
             Log.Logger = new LoggerConfiguration()
-                .MinimumLevel.ControlledBy(levelSwitch)
-                .WriteTo.Sink(sink, levelSwitch: levelSwitch)
-                .WriteTo.Trace(outputTemplate: format)
-                .CreateLogger();
+                        .MinimumLevel.ControlledBy(levelSwitch)
+                        .WriteTo.Sink(sink, levelSwitch: levelSwitch)
+                        .WriteTo.Trace(outputTemplate: format)
+                        .CreateLogger();
 
             if (exception != null)
                 Log.Logger.Error(exception, message ?? $"{exception.Message}");

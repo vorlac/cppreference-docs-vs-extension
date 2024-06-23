@@ -13,9 +13,16 @@ namespace CppReferenceDocsExtension.Core.Utils {
                 return new Uri(@"http://" + rawUrl);
 
             // if it's still invalid at this point, just treat the input as a search string
-            string[] sanitizedUri = Uri.EscapeDataString(rawUrl).Split(new[] { @"%20" }, StringSplitOptions.RemoveEmptyEntries);
+            string[] sanitizedUri = Uri.EscapeDataString(rawUrl)
+                                       .Split(new[] { @"%20" }, StringSplitOptions.RemoveEmptyEntries);
 
-            return new Uri(string.Join(@"https://www.google.com/search?q=", sanitizedUri, @"+site:cppreference.com"));
+            return new Uri(
+                string.Join(
+                    @"https://www.google.com/search?q=",
+                    sanitizedUri,
+                    @"+site:cppreference.com"
+                )
+            );
         }
     }
 }

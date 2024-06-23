@@ -3,14 +3,14 @@ using System.IO;
 using DocumentationProcessor.Properties;
 using DocumentationProcessor.Web;
 
-namespace DocumentationProcessor;
+namespace DocumentationProcessor {
+    internal sealed class Program {
+        private static int Main() {
+            Uri tempPath = new(Path.GetTempPath());
+            if (DocsDownloader.ValidateDownloadDirectory(tempPath))
+                DocsDownloader.FetchCppRefDocs(tempPath);
 
-internal sealed class Program {
-    private static int Main() {
-        Uri tempPath = new(Path.GetTempPath());
-        if (DocsDownloader.ValidateDownloadDirectory(tempPath))
-            DocsDownloader.FetchCppRefDocs(tempPath);
-
-        return 0;
-    }
-};
+            return 0;
+        }
+    };
+}

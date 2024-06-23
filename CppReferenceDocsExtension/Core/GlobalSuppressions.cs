@@ -1,9 +1,10 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
-[assembly: SuppressMessage(
-    "Usage",
-    "VSTHRD100:Avoid async void methods",
-    Target = "~N:CppReferenceDocsExtension",
-    Scope = "namespaceanddescendants",
-    Justification = "."
-)]
+[assembly:
+    SuppressMessage(
+        "Usage",
+        "VSTHRD100:Avoid async void methods",
+        Target = "~N:CppReferenceDocsExtension",
+        Scope = "namespaceanddescendants",
+        Justification = "."
+    )]

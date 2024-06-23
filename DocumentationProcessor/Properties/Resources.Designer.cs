@@ -1,13 +1,9 @@
-﻿
-namespace DocumentationProcessor.Properties
+﻿namespace DocumentationProcessor.Properties
 {
-    using System;
-
-
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    public class Resources
+    public record Resources
     {
         private static global::System.Resources.ResourceManager resourceMan;
         private static global::System.Globalization.CultureInfo resourceCulture;
@@ -16,12 +12,9 @@ namespace DocumentationProcessor.Properties
         internal Resources() { }
 
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        public static global::System.Resources.ResourceManager ResourceManager
-        {
-            get
-            {
-                if (object.ReferenceEquals(resourceMan, null))
-                {
+        public static global::System.Resources.ResourceManager ResourceManager {
+            get {
+                if (object.ReferenceEquals(resourceMan, null)) {
                     global::System.Resources.ResourceManager temp = new("DocumentationProcessor.Properties.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
@@ -39,10 +32,9 @@ namespace DocumentationProcessor.Properties
 
         public static string DocsRootDir { get; } = ResourceManager.GetString("DocsRootDir", resourceCulture);
         public static string DownloadDir { get; } = ResourceManager.GetString("DownloadDir", resourceCulture);
-        public static byte[] Xml_icon
-        {
-            get
-            {
+
+        public static byte[] Xml_icon {
+            get {
                 object obj = ResourceManager.GetObject("Xml.icon", resourceCulture);
                 return ((byte[])(obj));
             }

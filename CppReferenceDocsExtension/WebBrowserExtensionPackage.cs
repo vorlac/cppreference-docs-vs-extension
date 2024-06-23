@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using CppReferenceDocsExtension.Commands;
 using CppReferenceDocsExtension.Core.Utils;
 using CppReferenceDocsExtension.Settings;
+using CppReferenceDocsExtension.UI;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using Serilog;
@@ -21,10 +22,9 @@ namespace CppReferenceDocsExtension {
     [ProvideOptionPage(typeof(WebBrowserOptionsPage), Constants.ExtensionName, "General", 0, 0, true)]
     [ProvideProfile(typeof(WebBrowserOptionsPage), Constants.ExtensionName, "General", 0, 0, true)]
     public sealed class WebBrowserExtensionPackage : AsyncPackage {
-        public const string PackageGuidString = "1ba34956-275f-48c6-889b-a8834db18c23";
+        private const string PackageGuidString = "1ba34956-275f-48c6-889b-a8834db18c23";
 
-        protected override async Task InitializeAsync(CancellationToken cancellationToken,
-                                                      IProgress<ServiceProgressData> progress) {
+        protected override async Task InitializeAsync(CancellationToken cancellationToken, IProgress<ServiceProgressData> progress) {
             await base.InitializeAsync(cancellationToken, progress);
             await this.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
 
@@ -34,27 +34,28 @@ namespace CppReferenceDocsExtension {
 
         private void InitializeLogging() {
             const string format = "{Timestamp:HH:mm:ss.fff} [{Level}] {Pid} {Message}{NewLine}{Exception}";
-            var outputWindow = this.GetService<SVsOutputWindow, IVsOutputWindow>();
+            IVsOutputWindow outputWindow = this.GetService<SVsOutputWindow, IVsOutputWindow>();
+            LoggingLevelSwitch levelSwitch = new LoggingLevelSwitch { MinimumLevel = LogEventLevel.Verbose };
+            Exception exception = null;
+            string message = "";
 
-            var levelSwitch = new LoggingLevelSwitch { MinimumLevel = LogEventLevel.Verbose };
-            (Exception exception, var message) = (null, "");
             try {
-                var settings = this.GetService<IWebBrowserSettings>();
+                IWebBrowserSettings settings = this.GetService<IWebBrowserSettings>();
                 levelSwitch.MinimumLevel = settings.MinimumLogLevel;
-                settings.PropertyChanged += (s, e) => levelSwitch.MinimumLevel = settings.MinimumLogLevel;
+                settings.PropertyChanged += (s, e) =>
+                    levelSwitch.MinimumLevel = settings.MinimumLogLevel;
             }
             catch (Exception ex) {
                 exception = ex;
-                message =
-                    $"{nameof(WebBrowserExtensionPackage)}.{nameof(this.InitializeLogging)}(): Could not retrieve Logging Configuration";
+                message = $"{nameof(WebBrowserExtensionPackage)}.{nameof(this.InitializeLogging)}(): "
+                        + $"Could not retrieve Logging Configuration";
             }
 
-            var sink = new OutputPaneEventSink(outputWindow, format);
-            Log.Logger = new LoggerConfiguration()
-                        .MinimumLevel.ControlledBy(levelSwitch)
-                        .WriteTo.Sink(sink, levelSwitch: levelSwitch)
-                        .WriteTo.Trace(outputTemplate: format)
-                        .CreateLogger();
+            OutputPaneEventSink sink = new OutputPaneEventSink(outputWindow, format);
+            Log.Logger = new LoggerConfiguration().MinimumLevel.ControlledBy(levelSwitch)
+                                                  .WriteTo.Sink(sink, levelSwitch: levelSwitch)
+                                                  .WriteTo.Trace(outputTemplate: format)
+                                                  .CreateLogger();
 
             if (exception != null)
                 Log.Logger.Error(exception, message ?? $"{exception.Message}");

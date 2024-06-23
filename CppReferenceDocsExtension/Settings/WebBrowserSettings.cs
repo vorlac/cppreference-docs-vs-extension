@@ -22,13 +22,21 @@ namespace CppReferenceDocsExtension.Settings {
         [ImportingConstructor]
         public WebBrowserSettings(SVsServiceProvider vsServiceProvider) {
             try {
-                var manager = new ShellSettingsManager(vsServiceProvider);
+                ShellSettingsManager manager = new ShellSettingsManager(vsServiceProvider);
                 this.settingsStore = manager.GetWritableSettingsStore(SettingsScope.UserSettings);
-                if (this.settingsStore == null)
-                    this.log.Error($"{nameof(WebBrowserSettings)} Constructor: could not retrieve an instance of {nameof(WritableSettingsStore)}");
+                if (this.settingsStore == null) {
+                    this.log.Error(
+                        $"{nameof(WebBrowserSettings)} "
+                      + $"Constructor: could not retrieve an instance of {nameof(WritableSettingsStore)}"
+                    );
+                }
             }
             catch (Exception ex) {
-                this.log.Error(ex, $"{nameof(WebBrowserSettings)} Constructor: could not retrieve an instance of {nameof(WritableSettingsStore)}");
+                this.log.Error(
+                    ex,
+                    $"{nameof(WebBrowserSettings)} "
+                  + $"Constructor: could not retrieve an instance of {nameof(WritableSettingsStore)}"
+                );
             }
 
             this.homePage = DefaultHomePage;
@@ -52,7 +60,12 @@ namespace CppReferenceDocsExtension.Settings {
         public void Load() {
             try {
                 this.HomePage = this.settingsStore.GetString(SettingsKey, nameof(this.HomePage), DefaultHomePage) ?? "";
-                int logEventLevel = this.settingsStore.GetInt32(SettingsKey, nameof(this.MinimumLogLevel), (int)LogEventLevel.Information);
+                int logEventLevel = this.settingsStore.GetInt32(
+                    SettingsKey,
+                    nameof(this.MinimumLogLevel),
+                    (int)LogEventLevel.Information
+                );
+
                 this.MinimumLogLevel = (LogEventLevel)logEventLevel;
             }
             catch (Exception ex) {
@@ -62,8 +75,9 @@ namespace CppReferenceDocsExtension.Settings {
 
         public void Save() {
             try {
-                if (!this.settingsStore.CollectionExists(SettingsKey))
+                if (!this.settingsStore.CollectionExists(SettingsKey)) {
                     this.settingsStore.CreateCollection(SettingsKey);
+                }
 
                 this.settingsStore.SetString(SettingsKey, nameof(this.HomePage), this.HomePage ?? "");
                 this.settingsStore.SetInt32(SettingsKey, nameof(this.MinimumLogLevel), (int)this.MinimumLogLevel);
@@ -74,8 +88,9 @@ namespace CppReferenceDocsExtension.Settings {
         }
 
         private bool Set<T>(ref T target, T value, [CallerMemberName] string propName = null) {
-            if (EqualityComparer<T>.Default.Equals(target, value))
+            if (EqualityComparer<T>.Default.Equals(target, value)) {
                 return false;
+            }
 
             target = value;
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));

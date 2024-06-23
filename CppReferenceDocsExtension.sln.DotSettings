@@ -96,7 +96,7 @@
 	<s:Int64 x:Key="/Default/CodeStyle/CodeFormatting/XmlFormatter/WRAP_LIMIT/@EntryValue">100</s:Int64>
 	<s:String x:Key="/Default/CodeStyle/CSharpVarKeywordUsage/ForOtherTypes/@EntryValue">UseVarWhenEvident</s:String>
 	<s:Boolean x:Key="/Default/CodeStyle/EditorConfig/EnableClangFormatSupport/@EntryValue">False</s:Boolean>
-	<s:Boolean x:Key="/Default/CodeStyle/EditorConfig/EnableEditorConfigSupport/@EntryValue">False</s:Boolean>
+	<s:Boolean x:Key="/Default/CodeStyle/EditorConfig/EnableEditorConfigSupport/@EntryValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/Environment/AIAssistantOptions/IsAccessToCodeEnabled/@EntryValue">False</s:Boolean>
 	<s:Boolean x:Key="/Default/Environment/AIAssistantOptions/IsContextActionsEnabled/@EntryValue">False</s:Boolean>
 	<s:Boolean x:Key="/Default/Environment/AIAssistantOptions/IsContextSlidingWindowEnabled/@EntryValue">False</s:Boolean>

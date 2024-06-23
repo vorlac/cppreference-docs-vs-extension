@@ -1,3 +1,3 @@
-﻿namespace DocumentationProcessor;
-
-public class CppRefDocsParser { }
+﻿namespace DocumentationProcessor.XML {
+    public class CppRefDocsParser { }
+}

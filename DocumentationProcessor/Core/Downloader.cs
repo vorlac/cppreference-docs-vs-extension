@@ -1,17 +1,23 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using DocumentationProcessor.Properties;
 
-namespace DocumentationProcessor.Web {
-    internal static class DocsDownloader {
-        private static readonly Uri CppReferenceOfflineDocsUri =
-            new(@"https://github.com/PeterFeicht/cppreference-doc/releases/latest");
-        private static readonly Uri CppReferenceDocReleasesUri =
+namespace DocumentationProcessor.Core {
+    internal static class Downloader {
+        // TODO: move default paths into a configurable settings manager
+        public static readonly Uri TempDataDir = new(Path.GetTempPath());
+        public static readonly Uri UserDataDir = new(@"C:/temp/");
+
+        public static readonly Uri CppReferenceDocsMetadataFile =
+            new(Path.Join(TempDataDir.AbsolutePath, @"cppref-docs-releases.json"));
+        public static readonly Uri CppReferenceDocsArchiveFile =
+            new(Path.Join(TempDataDir.AbsolutePath, @"cppref-docs-html-book.zip"));
+        public static readonly Uri CppReferenceDocsExtractPath =
+            new(Path.Join(UserDataDir.AbsolutePath, @"cppreference-docs/"));
+
+        public static readonly Uri CppReferenceDocReleasesUri =
             new(@"https://api.github.com/repos/PeterFeicht/cppreference-doc/releases");
 
         public static bool ValidateDownloadDirectory(Uri uri) {
@@ -35,9 +41,8 @@ namespace DocumentationProcessor.Web {
                 uri = new Uri(absPath);
             }
 
-            if (Directory.Exists(uri.AbsolutePath)) {
+            if (Directory.Exists(uri.AbsolutePath))
                 Console.WriteLine(Resources.DownloadDir, uri.ToString());
-            }
             else {
                 Console.WriteLine(@$"[4] Creating Directory: {uri.LocalPath}");
                 Console.WriteLine(
@@ -54,15 +59,18 @@ namespace DocumentationProcessor.Web {
             string tempDownloadDir = dirPath.ToString();
             Console.WriteLine(@$"Creating directory: {tempDownloadDir}");
             Directory.CreateDirectory(tempDownloadDir);
-
             return Directory.Exists(tempDownloadDir);
         }
 
-        public static void FetchCppRefDocs(Uri uri) {
-            using HttpClient client = new HttpClient();
-            using Task<Stream> s = client.GetStreamAsync(CppReferenceDocReleasesUri);
-            using FileStream fs = new FileStream(uri.AbsolutePath + "cppref-docs-releases.txt", FileMode.OpenOrCreate);
+        public static bool DownloadContent(Uri downloadUri, Uri savefileUri) {
+            using HttpClient client = new();
+            client.DefaultRequestHeaders.Add("User-Agent", "none");
+
+            using Task<Stream> s = client.GetStreamAsync(downloadUri);
+            using FileStream fs = new(savefileUri.AbsolutePath, FileMode.OpenOrCreate);
             s.Result.CopyTo(fs);
+
+            return File.Exists(savefileUri.AbsolutePath);
         }
     }
 }

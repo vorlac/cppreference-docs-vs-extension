@@ -3,14 +3,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
 using System.IO.Compression;
-using System.Linq;
-using System.Xml;
 using System.Threading.Tasks;
 using DocumentationProcessor.Core;
 
 namespace DocumentationProcessor {
     internal static class Program {
-        private static void Main() {
+        private static async Task Main() {
             Uri docsDownloadUri = null;
 
             Uri downloadDirPath = Downloader.TempDataDir;
@@ -62,14 +60,11 @@ namespace DocumentationProcessor {
             }
 
             Uri docsRootDirUri = Downloader.CppReferenceDocsExtractPath;
-            foreach (string filePath in Indexer.IndexFiles) {
-                FileStream stream = new(filePath, FileMode.Open);
-                Indexer.ReadCppReferenceDocsTagsXml(stream).Wait();
-            }
+            IAsyncEnumerable<Indexer.Compound> tags = Indexer.ParseCppReferenceIndexTags();
+            await foreach (Indexer.Compound tag in tags)
+                tag.Print();
 
-            IEnumerable<string> cpprefFileList =
-                Indexer.GetFileListing(docsRootDirUri.AbsolutePath);
-
+            IEnumerable<string> cpprefFileList = Indexer.GetFileListing(docsRootDirUri.AbsolutePath);
             foreach (string filePath in cpprefFileList)
                 Console.WriteLine(@$"{nameof(Program)} : {filePath}");
         }

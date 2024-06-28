@@ -27,20 +27,20 @@ namespace CppReferenceDocsExtension {
         protected override async Task InitializeAsync(CancellationToken cancellationToken, IProgress<ServiceProgressData> progress) {
             await base.InitializeAsync(cancellationToken, progress);
             await this.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
-
             this.InitializeLogging();
+
             await WebBrowserCommand.InitializeAsync(this);
         }
 
         private void InitializeLogging() {
             const string format = "{Timestamp:HH:mm:ss.fff} [{Level}] {Pid} {Message}{NewLine}{Exception}";
             IVsOutputWindow outputWindow = this.GetService<SVsOutputWindow, IVsOutputWindow>();
-            LoggingLevelSwitch levelSwitch = new LoggingLevelSwitch { MinimumLevel = LogEventLevel.Verbose };
+            var levelSwitch = new LoggingLevelSwitch { MinimumLevel = LogEventLevel.Verbose };
             Exception exception = null;
             string message = "";
 
             try {
-                IWebBrowserSettings settings = this.GetService<IWebBrowserSettings>();
+                var settings = this.GetService<IWebBrowserSettings>();
                 levelSwitch.MinimumLevel = settings.MinimumLogLevel;
                 settings.PropertyChanged += (s, e) =>
                     levelSwitch.MinimumLevel = settings.MinimumLogLevel;
@@ -51,7 +51,7 @@ namespace CppReferenceDocsExtension {
                         + $"Could not retrieve Logging Configuration";
             }
 
-            OutputPaneEventSink sink = new OutputPaneEventSink(outputWindow, format);
+            var sink = new OutputPaneEventSink(outputWindow, format);
             Log.Logger = new LoggerConfiguration().MinimumLevel.ControlledBy(levelSwitch)
                                                   .WriteTo.Sink(sink, levelSwitch: levelSwitch)
                                                   .WriteTo.Trace(outputTemplate: format)

@@ -56,7 +56,8 @@ namespace CppReferenceDocsExtension.UI {
         }
 
         private void BrowseHomeCmdCanExecute(object sender, CanExecuteRoutedEventArgs e) {
-            e.CanExecute = !this.isNavigating && this.webView?.CoreWebView2 != null;
+            e.CanExecute = !this.isNavigating
+                        && this.webView?.CoreWebView2 != null;
         }
 
         private async void BrowseHomeCmdExecuted(object target, ExecutedRoutedEventArgs e) {

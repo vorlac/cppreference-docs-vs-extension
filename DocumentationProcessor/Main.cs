@@ -4,6 +4,7 @@ using System.IO;
 using System.Text.Json;
 using System.IO.Compression;
 using DocumentationProcessor.Core;
+using DocumentationProcessor.Properties;
 
 namespace DocumentationProcessor {
     internal static class Program {
@@ -23,7 +24,7 @@ namespace DocumentationProcessor {
             //   2. Error handling
             //   3. Path normalization
             //   4. configurable temp & user data paths
-            if (download && !Directory.Exists(userDataDirPath.AbsolutePath)) {
+            if (download && !Directory.Exists(Resources.UserDataDir)) {
                 if (!Utils.ValidateDirectoryPath(downloadDirPath))
                     Console.WriteLine($@"Failed to validate temp data dir: {downloadDirPath.AbsolutePath}");
                 else if (!Downloader.DownloadContent(docsReleasesUri, cppDocsMetadata))

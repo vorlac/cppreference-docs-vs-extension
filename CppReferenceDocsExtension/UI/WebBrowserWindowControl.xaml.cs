@@ -148,7 +148,7 @@ namespace CppReferenceDocsExtension.UI {
                 const int defaultMarginY = 0;
                 const WebViewCornerPlacement cornerAlignment = WebViewCornerPlacement.TopLeft;
 
-                SD.Point margin = new SD.Point(defaultMarginX, defaultMarginY);
+                var margin = new SD.Point(defaultMarginX, defaultMarginY);
                 this.webView.CoreWebView2.DefaultDownloadDialogCornerAlignment = cornerAlignment;
                 this.webView.CoreWebView2.DefaultDownloadDialogMargin = margin;
             }
@@ -200,7 +200,7 @@ namespace CppReferenceDocsExtension.UI {
 
         private async Task NavigateToHomeAsync() {
             try {
-                IWebBrowserSettings settings = this.GetService<IWebBrowserSettings>();
+                var settings = this.GetService<IWebBrowserSettings>();
                 Uri homepage = settings.GetHomePageUri();
                 Log.Verbose($"Home Page Uri is '{homepage}'");
                 await this.NavigateToAsync(homepage);

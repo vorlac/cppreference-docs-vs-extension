@@ -13,7 +13,7 @@ namespace CppReferenceDocsExtension.Core.Utils {
             try {
                 ThreadHelper.ThrowIfNotOnUIThread();
                 IComponentModel componentModel = sp.GetService<SComponentModel, IComponentModel>();
-                T result = componentModel.GetService<T>();
+                var result = componentModel.GetService<T>();
                 Assumes.Present(result);
 
                 return result;

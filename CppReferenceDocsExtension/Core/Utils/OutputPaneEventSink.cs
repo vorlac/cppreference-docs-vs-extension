@@ -23,7 +23,7 @@ namespace CppReferenceDocsExtension.Core.Utils {
         }
 
         public void Emit(LogEvent logEvent) {
-            StringWriter sw = new StringWriter();
+            var sw = new StringWriter();
             this.formatter.Format(logEvent, sw);
             string message = sw.ToString();
 

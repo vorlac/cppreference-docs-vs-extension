@@ -2,32 +2,31 @@
 using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
+using DocumentationProcessor.Properties;
 
 namespace DocumentationProcessor.Core {
     internal static class Downloader {
-        // TODO: move default paths into a configurable settings manager
-        public static readonly Uri TempDataDir = new(Path.GetTempPath());
-        public static readonly Uri UserDataDir = new(@"C:/temp/");
-
+        public static readonly Uri TempDataDir =
+            new(Resources.TempDataDir ?? Path.GetTempPath());
+        public static readonly Uri UserDataDir =
+            new(Resources.UserDataDir);
         public static readonly Uri CppReferenceDocsMetadataFile =
-            new(Path.Join(TempDataDir.AbsolutePath, @"cppref-docs-releases.json"));
+            new(Path.Join(Resources.TempDataDir, Resources.CppRefDocsReleaseMetadata));
         public static readonly Uri CppReferenceDocsArchiveFile =
-            new(Path.Join(TempDataDir.AbsolutePath, @"cppref-docs-html-book.zip"));
+            new(Path.Join(Resources.TempDataDir, Resources.CppRefDocsArchive));
         public static readonly Uri CppReferenceDocsExtractPath =
-            new(Path.Join(UserDataDir.AbsolutePath, @"cppreference-docs/"));
+            new(Path.Join(Resources.UserDataDir, Resources.CppRefDocsDir));
 
         public static readonly Uri CppReferenceDocReleasesUri =
-            new(@"https://api.github.com/repos/PeterFeicht/cppreference-doc/releases");
+            new(Resources.CppRefDocsReleasesAPI);
 
-        public static bool DownloadContent(Uri downloadUri, Uri savefileUri) {
-            using HttpClient client = new();
-            client.DefaultRequestHeaders.Add("User-Agent", "none");
-
+        public static bool DownloadContent(Uri downloadUri, Uri saveFileUri) {
+            using var client = new HttpClient { DefaultRequestHeaders = { { "User-Agent", "none" } } };
             using Task<Stream> s = client.GetStreamAsync(downloadUri);
-            using FileStream fs = new(savefileUri.AbsolutePath, FileMode.OpenOrCreate);
+            using FileStream fs = new(saveFileUri.AbsolutePath, FileMode.OpenOrCreate);
             s.Result.CopyTo(fs);
 
-            return File.Exists(savefileUri.AbsolutePath);
+            return File.Exists(saveFileUri.AbsolutePath);
         }
     }
 }

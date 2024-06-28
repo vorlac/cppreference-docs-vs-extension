@@ -35,7 +35,6 @@ namespace CppReferenceDocsExtension.UI {
 
         public int OnClose(ref uint pgrfSaveOptions) {
             this.log.Debug($"{nameof(WebBrowserWindow)}: OnClose({pgrfSaveOptions})");
-
             return VSConstants.S_OK;
         }
 

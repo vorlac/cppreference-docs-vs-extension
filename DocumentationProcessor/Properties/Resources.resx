@@ -58,17 +58,32 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="DocsRootDir" xml:space="preserve">
-    <value>C:\temp\installed-docs\</value>
+  <data name="TempDataDir" xml:space="preserve">
+    <value>C:\temp\cppref\temp-data\</value>
+    <comment>The directory used for temp files created during the download, unpacking, and indexing of the docs.</comment>
   </data>
-  <data name="DownloadDir" xml:space="preserve">
-    <value>C:\temp\cppref-docs\</value>
+  <data name="UserDataDir" xml:space="preserve">
+    <value>C:\temp\cppref\user-data\</value>
+    <comment>The directory used to store the unpacked docs archive and sqlite DB used by the extension.</comment>
   </data>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="Xml.icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Xml.icon.ico;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="DocsDownloader_ValidateDownloadDirectory_Download_directory_found___0_" xml:space="preserve">
-      <value>Download directory found: {0}</value>
+  <data name="CppRefDocsArchive" xml:space="preserve">
+    <value>cppref-docs-html-book.zip</value>
+    <comment>The name assigned to the offline cppreference docs archive.</comment>
+  </data>
+  <data name="CppRefDocsDir" xml:space="preserve">
+    <value>cppreference-docs/</value>
+    <comment>The directory name all documentation will be stored in (within UserDataDir).</comment>
+  </data>
+  <data name="CppRefDocsReleaseMetadata" xml:space="preserve">
+    <value>cppref-docs-releases.json</value>
+    <comment>The temp file created from the response of the github API to query all release metadata.</comment>
+  </data>
+  <data name="CppRefDocsReleasesAPI" xml:space="preserve">
+    <value>https://api.github.com/repos/PeterFeicht/cppreference-doc/releases</value>
+    <comment>The github API called to find the latest release of the offline cppreference documentation.</comment>
   </data>
 </root>

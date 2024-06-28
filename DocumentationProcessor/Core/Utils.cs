@@ -1,15 +1,24 @@
-﻿using DocumentationProcessor.Properties;
-using System.IO;
+﻿using System.IO;
 using System;
 using System.Collections.Generic;
+using DocumentationProcessor.Properties;
 
 namespace DocumentationProcessor.Core {
     public static class Utils {
+        private static bool CreateDirectory(Uri dirPath) {
+            string tempDownloadDir = dirPath.ToString();
+            Console.WriteLine(@$"Creating directory: {tempDownloadDir}");
+            Directory.CreateDirectory(tempDownloadDir);
+            return Directory.Exists(tempDownloadDir);
+        }
+
         public static IEnumerable<string> GetFileListing(string path) {
             Queue<string> queue = new();
             queue.Enqueue(path);
+
             while (queue.Count > 0) {
                 path = queue.Dequeue();
+
                 try {
                     string[] subDirs = Directory.GetDirectories(path);
                     foreach (string subDir in subDirs)
@@ -19,50 +28,21 @@ namespace DocumentationProcessor.Core {
                     Console.Error.WriteLine(ex);
                 }
 
-                string[] files = [];
-                try {
-                    files = Directory.GetFiles(path);
-                }
-                catch (Exception ex) {
-                    Console.Error.WriteLine(ex);
-                }
-
-                foreach (string t in files)
-                    yield return t;
+                string[] filePaths = Directory.GetFiles(path);
+                foreach (string file in filePaths)
+                    yield return file;
             }
         }
 
-        private static bool CreateDirectory(Uri dirPath) {
-            string tempDownloadDir = dirPath.ToString();
-            Console.WriteLine(@$"Creating directory: {tempDownloadDir}");
-            Directory.CreateDirectory(tempDownloadDir);
-            return Directory.Exists(tempDownloadDir);
-        }
-
-        public static bool ValidateDirectoryPath(Uri uri) {
+        public static bool ValidateDirectoryPath(Uri uri, bool createIfMissing = true) {
             if (uri.LocalPath.Length == 0) {
-                uri = new Uri(Resources.DownloadDir);
                 Console.WriteLine(@$"[1] The download path isn't a valid local path: {uri.LocalPath}");
                 Console.WriteLine(@$"[1] Setting temp download path to: {uri.LocalPath}");
             }
 
-            if (uri.LocalPath.Length == 0) {
-                Console.WriteLine(@$"[2] The download path isn't a valid local path: {uri.LocalPath}");
-                string path = Path.GetTempPath();
-                uri = new Uri(path);
-            }
-
-            if (uri.LocalPath.Length == 0)
-                Console.WriteLine(@$"[3] The download path isn't a valid local path: {uri.LocalPath}");
-
-            if (!uri.IsAbsoluteUri) {
-                string absPath = Path.Join(@"file://", uri.ToString());
-                uri = new Uri(absPath);
-            }
-
             if (Directory.Exists(uri.AbsolutePath))
-                Console.WriteLine(Resources.DownloadDir, uri.ToString());
-            else {
+                Console.WriteLine(Resources.TempDataDir, uri.AbsoluteUri);
+            else if (createIfMissing) {
                 Console.WriteLine(@$"[4] Creating Directory: {uri.LocalPath}");
                 Console.WriteLine(
                     !CreateDirectory(uri)

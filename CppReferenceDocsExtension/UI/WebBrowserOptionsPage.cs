@@ -8,6 +8,7 @@ using Serilog;
 
 namespace CppReferenceDocsExtension.UI {
     [ComVisible(true)]
+    [Guid("6a23a02d-5801-4562-b257-b58370eb4e32")]
     public sealed class WebBrowserOptionsPage : UIElementDialogPage {
         private WebBrowserOptionsPageControl control;
         private readonly ILogger log = Log.Logger;

@@ -23,25 +23,25 @@ namespace CppReferenceDocsExtension.Commands {
             this.package = asyncPackage ?? throw new ArgumentNullException(nameof(asyncPackage));
             DTE dte = dteInstance ?? throw new ArgumentNullException(nameof(dteInstance));
             commandService = commandService ?? throw new ArgumentNullException(nameof(commandService));
-            CommandID menuCommandID = new CommandID(SCommandSet, CommandId);
-            MenuCommand menuItem = new MenuCommand(this.Execute, menuCommandID);
+            var menuCommandID = new CommandID(SCommandSet, CommandId);
+            var menuItem = new MenuCommand(this.Execute, menuCommandID);
             commandService.AddCommand(menuItem);
         }
 
         public static async Task InitializeAsync(AsyncPackage package) {
             await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(package.DisposalToken);
-            OleMenuCommandService commandService = await package.GetServiceAsync(
+            var commandService = await package.GetServiceAsync(
                 typeof(IMenuCommandService)
             ) as OleMenuCommandService;
 
-            DTE dte = (DTE)await package.GetServiceAsync(typeof(DTE));
+            var dte = (DTE)await package.GetServiceAsync(typeof(DTE));
             Instance = new WebBrowserCommand(package, dte, commandService);
         }
 
         private void Execute(object sender, EventArgs e) {
             _ = this.package.JoinableTaskFactory.RunAsync(
                 async delegate {
-                    WebBrowserWindow window = await this.package.ShowToolWindowAsync(
+                    var window = await this.package.ShowToolWindowAsync(
                         typeof(WebBrowserWindow),
                         0,
                         true,

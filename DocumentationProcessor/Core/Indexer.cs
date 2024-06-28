@@ -15,139 +15,6 @@ namespace DocumentationProcessor.Core {
         private Uri UserDataDir { get; } = userDataDir;
         private Uri DocsRootDir { get; } = cppRefDocsDir;
 
-        public class Compound {
-            public string Type { get; init; }
-            public string Name { get; init; }
-            public string FileName { get; init; }
-            public string NameSpace { get; set; }
-            public List<Member> Members { get; } = [];
-            public List<Class> Classes { get; } = [];
-
-            public void InsertTableRecord(SQLiteConnection connection) {
-                string insertStatement = $"""
-                        insert into symbols (
-                            name,
-                            type, 
-                            filename, 
-                            namespace
-                        )
-                        values (
-                            '{this.Name}', 
-                            '{this.Type}', 
-                            '{this.FileName}', 
-                            '{this.NameSpace}'
-                        );
-                    """;
-
-                SQLiteCommand command = new(insertStatement, connection);
-                if (command.ExecuteNonQuery() > 0) {
-                    long symbolID = connection.LastInsertRowId;
-
-                    foreach (Member member in this.Members)
-                        member.InsertTableRecord(connection, symbolID);
-
-                    foreach (Class member in this.Classes)
-                        member.InsertTableRecord(connection, symbolID);
-                }
-            }
-
-            public class Member {
-                public string Type { get; init; }
-                public string Name { get; init; }
-                public string AnchorFile { get; init; }
-                public string Anchor { get; init; }
-                public string ArgList { get; init; }
-
-                public void InsertTableRecord(SQLiteConnection connection, long parentID) {
-                    string tableName = this.Type switch {
-                        "function" => "functions",
-                        "variable" => "variables",
-                        _          => null
-                    };
-
-                    string insertStatement = $"""
-                            insert into {tableName} (
-                                name,
-                                anchor_file,
-                                anchor,
-                                arg_list,
-                                type,
-                                parent_symbol
-                            ) 
-                            values (
-                                '{this.Name}', 
-                                '{this.AnchorFile}', 
-                                '{this.Anchor}', 
-                                '{this.ArgList}', 
-                                '{this.Type}', 
-                                '{parentID}'
-                            );
-                        """;
-
-                    SQLiteCommand command = new(insertStatement, connection);
-                    command.ExecuteNonQuery();
-                }
-            }
-
-            public class Class {
-                public string Type { get; init; }
-                public string Name { get; init; }
-
-                public void InsertTableRecord(SQLiteConnection connection, long parentID) {
-                    string insertStatement = $"""
-                            insert into classes (
-                                name, 
-                                parent_symbol
-                            ) 
-                            values (
-                                '{this.Name}', 
-                                '{parentID}'
-                            );
-                        """;
-
-                    SQLiteCommand command = new(insertStatement, connection);
-                    command.ExecuteNonQuery();
-                }
-            }
-
-            public void Print() {
-                Console.WriteLine(@"{");
-                Console.WriteLine(@$"  Name: {this.Name}");
-                Console.WriteLine(@$"  Type: {this.Type}");
-                Console.WriteLine(@$"  FileName: {this.FileName}");
-                Console.WriteLine(@$"  NameSpace: {this.NameSpace}");
-
-                if (this.Members.Count > 0) {
-                    Console.WriteLine(@"  Members: [");
-                    foreach (Member member in this.Members) {
-                        Console.WriteLine(@"    {");
-                        Console.WriteLine(@$"      Type: {member.Type}");
-                        Console.WriteLine(@$"      Name: {member.Name}");
-                        Console.WriteLine(@$"      ArgList: {member.ArgList}");
-                        Console.WriteLine(@$"      AnchorFile: {member.AnchorFile}");
-                        Console.WriteLine(@$"      Anchor: {member.Anchor}");
-                        Console.WriteLine(@"    },");
-                    }
-
-                    Console.WriteLine(@"  ],");
-                }
-
-                if (this.Classes.Count > 0) {
-                    Console.WriteLine(@"  Classes: [");
-                    foreach (Class classTag in this.Classes) {
-                        Console.WriteLine(@"    {");
-                        Console.WriteLine(@$"      Type: {classTag.Type}");
-                        Console.WriteLine(@$"      Name: {classTag.Name}");
-                        Console.WriteLine(@"    },");
-                    }
-
-                    Console.WriteLine(@"  ]");
-                }
-
-                Console.WriteLine(@"},");
-            }
-        }
-
         public void BuildCppReferenceSymbolIndex() {
             this.ParseAndIndexDocs().Wait();
         }
@@ -190,11 +57,11 @@ namespace DocumentationProcessor.Core {
         }
 
         private async Task PopulateIndexDB(SQLiteConnection connection) {
-            await foreach (Compound tag in this.ParseCppReferenceIndexTags())
+            await foreach (CppSymbolInfo tag in this.ParseCppReferenceIndexTags())
                 tag.InsertTableRecord(connection);
         }
 
-        private async IAsyncEnumerable<Compound> ParseCppReferenceIndexTags() {
+        private async IAsyncEnumerable<CppSymbolInfo> ParseCppReferenceIndexTags() {
             string indexFilePath = Path.Join(
                 this.DocsRootDir.AbsolutePath,
                 @"cppreference-doxygen-local.tag.xml"
@@ -202,7 +69,7 @@ namespace DocumentationProcessor.Core {
 
             FileStream stream = new(indexFilePath, FileMode.Open);
             await foreach (XElement elem in StreamElementsAsync(stream, "compound")) {
-                Compound compoundTag = new() {
+                CppSymbolInfo compoundTag = new() {
                     Name = elem.Element("name")?.Value,
                     Type = elem.Attribute("kind")?.Value,
                     FileName = elem.Element("filename")?.Value,
@@ -213,7 +80,7 @@ namespace DocumentationProcessor.Core {
 
                 IEnumerable<XElement> memberElements = elem.Elements("member");
                 foreach (XElement memberElem in memberElements) {
-                    Compound.Member memberTag = new() {
+                    CppSymbolInfo.Member memberTag = new() {
                         Type = memberElem.Attribute(@"kind")?.Value,
                         Anchor = memberElem.Element(@"anchor")?.Value,
                         Name = memberElem.Element(@"name")?.Value,
@@ -226,7 +93,7 @@ namespace DocumentationProcessor.Core {
 
                 IEnumerable<XElement> classElements = elem.Elements("class");
                 foreach (XElement classElem in classElements) {
-                    Compound.Class classTag = new() {
+                    CppSymbolInfo.Class classTag = new() {
                         Type = classElem.Attribute("kind")?.Value,
                         Name = classElem.Value
                     };
@@ -244,7 +111,7 @@ namespace DocumentationProcessor.Core {
                 IgnoreWhitespace = true
             };
 
-            using XmlReader reader = XmlReader.Create(stream, settings);
+            using var reader = XmlReader.Create(stream, settings);
             while (await reader.ReadAsync()) {
                 while (reader.NodeType == XmlNodeType.Element && reader.Name == matchName) {
                     if (await XNode.ReadFromAsync(reader, CancellationToken.None) is XElement elem)

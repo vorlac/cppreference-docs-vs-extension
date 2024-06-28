@@ -5,6 +5,8 @@ using System.Xml;
 using System.Xml.Linq;
 using System.Data.SQLite;
 using System.Data;
+using System.Data.Common;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace DocumentationProcessor.Core {
@@ -13,8 +15,42 @@ namespace DocumentationProcessor.Core {
         private Uri UserDataDir { get; } = userDataDir;
         private Uri DocsRootDir { get; } = cppRefDocsDir;
 
-        [Serializable]
         public class Compound {
+            public string Type { get; init; }
+            public string Name { get; init; }
+            public string FileName { get; init; }
+            public string NameSpace { get; set; }
+            public List<Member> Members { get; } = [];
+            public List<Class> Classes { get; } = [];
+
+            public void InsertTableRecord(SQLiteConnection connection) {
+                string insertStatement = $"""
+                        insert into symbols (
+                            name,
+                            type, 
+                            filename, 
+                            namespace
+                        )
+                        values (
+                            '{this.Name}', 
+                            '{this.Type}', 
+                            '{this.FileName}', 
+                            '{this.NameSpace}'
+                        );
+                    """;
+
+                SQLiteCommand command = new(insertStatement, connection);
+                if (command.ExecuteNonQuery() > 0) {
+                    long symbolID = connection.LastInsertRowId;
+
+                    foreach (Member member in this.Members)
+                        member.InsertTableRecord(connection, symbolID);
+
+                    foreach (Class member in this.Classes)
+                        member.InsertTableRecord(connection, symbolID);
+                }
+            }
+
             public class Member {
                 public string Type { get; init; }
                 public string Name { get; init; }
@@ -22,7 +58,7 @@ namespace DocumentationProcessor.Core {
                 public string Anchor { get; init; }
                 public string ArgList { get; init; }
 
-                public async void InsertTableRecord(SQLiteConnection connection, long parentID) {
+                public void InsertTableRecord(SQLiteConnection connection, long parentID) {
                     string tableName = this.Type switch {
                         "function" => "functions",
                         "variable" => "variables",
@@ -49,7 +85,7 @@ namespace DocumentationProcessor.Core {
                         """;
 
                     SQLiteCommand command = new(insertStatement, connection);
-                    await command.ExecuteNonQueryAsync();
+                    command.ExecuteNonQuery();
                 }
             }
 
@@ -57,7 +93,7 @@ namespace DocumentationProcessor.Core {
                 public string Type { get; init; }
                 public string Name { get; init; }
 
-                public async void InsertTableRecord(SQLiteConnection connection, long parentID) {
+                public void InsertTableRecord(SQLiteConnection connection, long parentID) {
                     string insertStatement = $"""
                             insert into classes (
                                 name, 
@@ -70,40 +106,7 @@ namespace DocumentationProcessor.Core {
                         """;
 
                     SQLiteCommand command = new(insertStatement, connection);
-                    await command.ExecuteNonQueryAsync();
-                }
-            }
-
-            public string Type { get; init; }
-            public string Name { get; init; }
-            public string FileName { get; init; }
-            public string NameSpace { get; init; }
-            public List<Member> Members { get; } = [];
-            public List<Class> Classes { get; } = [];
-
-            public void InsertTableRecord(SQLiteConnection connection) {
-                string insertStatement = $"""
-                        insert into symbols (
-                            type, 
-                            filename, 
-                            namespace
-                        )
-                        values (
-                            '{this.Type}', 
-                            '{this.FileName}', 
-                            '{this.NameSpace}'
-                        );
-                    """;
-
-                SQLiteCommand command = new(insertStatement, connection);
-                if (command.ExecuteNonQuery() > 0) {
-                    long symbolID = connection.LastInsertRowId;
-
-                    foreach (Member member in this.Members)
-                        member.InsertTableRecord(connection, symbolID);
-
-                    foreach (Class member in this.Classes)
-                        member.InsertTableRecord(connection, symbolID);
+                    command.ExecuteNonQuery();
                 }
             }
 
@@ -143,17 +146,26 @@ namespace DocumentationProcessor.Core {
 
                 Console.WriteLine(@"},");
             }
-        };
+        }
 
-        public async void ParseAndIndexDocs() {
+        public void BuildCppReferenceSymbolIndex() {
+            this.ParseAndIndexDocs().Wait();
+        }
+
+        private async Task ParseAndIndexDocs() {
             if (this.InitIndexDatabase()) {
                 Console.WriteLine(@$"Parsing and indexing offline archive of cppreference: {this.DocsRootDir}");
-                SQLiteTransaction transaction = this.Database.BeginTransaction();
+                DbTransaction transaction = await this.Database.BeginTransactionAsync();
+
+                string sqlScriptPath = Path.Join(AppContext.BaseDirectory, @"SQL\DBSchema.sql");
+                SQLiteCommand command = new(await File.ReadAllTextAsync(sqlScriptPath), this.Database);
+                await command.ExecuteNonQueryAsync();
                 await this.PopulateIndexDB(this.Database);
-                transaction.Commit();
+                await transaction.CommitAsync();
             }
 
-            this.Database?.Close();
+            if (this.Database != null)
+                await this.Database.CloseAsync();
         }
 
         private bool InitIndexDatabase() {
@@ -174,17 +186,17 @@ namespace DocumentationProcessor.Core {
             if (this.Database.State != ConnectionState.Open)
                 throw new SQLiteException($"Failed to initialize cppreference index DB: {dbPath}");
 
-            string sqlScriptPath = Path.Join(AppContext.BaseDirectory, @"SQL\DBSchema.sql");
-            SQLiteCommand command = new(File.ReadAllText(sqlScriptPath), this.Database);
-            command.ExecuteNonQuery();
-
-            return true;
+            return this.Database.State == ConnectionState.Open;
         }
 
         private async Task PopulateIndexDB(SQLiteConnection connection) {
-            IAsyncEnumerable<Compound> tags = this.ParseCppReferenceIndexTags();
-            await foreach (Compound tag in tags)
+            await foreach (Compound tag in this.ParseCppReferenceIndexTags()) {
+                // TODO: DEBUG - REMOVE
+                if (tag.Name == "memory" && tag.Type == "file")
+                    tag.Print();
+
                 tag.InsertTableRecord(connection);
+            }
         }
 
         private async IAsyncEnumerable<Compound> ParseCppReferenceIndexTags() {
@@ -194,13 +206,14 @@ namespace DocumentationProcessor.Core {
             );
 
             FileStream stream = new(indexFilePath, FileMode.Open);
-            IAsyncEnumerable<XElement> compoundElements = StreamElementsAsync(stream, "compound");
-            await foreach (XElement elem in compoundElements) {
+            await foreach (XElement elem in StreamElementsAsync(stream, "compound")) {
                 Compound compoundTag = new() {
                     Name = elem.Element("name")?.Value,
                     Type = elem.Attribute("kind")?.Value,
                     FileName = elem.Element("filename")?.Value,
-                    NameSpace = elem.Element("namespace")?.Value
+                    NameSpace = elem.Attribute("kind")?.Value == "file"
+                        ? elem.Element("namespace")?.Value
+                        : null
                 };
 
                 IEnumerable<XElement> memberElements = elem.Elements("member");
@@ -239,7 +252,7 @@ namespace DocumentationProcessor.Core {
             using XmlReader reader = XmlReader.Create(stream, settings);
             while (await reader.ReadAsync()) {
                 while (reader.ReadToFollowing(matchName))
-                    if (XNode.ReadFrom(reader) is XElement elem)
+                    if (await XNode.ReadFromAsync(reader, CancellationToken.None) is XElement elem)
                         yield return elem;
             }
         }

@@ -59,12 +59,12 @@ namespace DocumentationProcessor {
             }
 
             Indexer indexer = new(Downloader.UserDataDir, Downloader.CppReferenceDocsExtractPath);
-            indexer.ParseAndIndexDocs();
+            indexer.BuildCppReferenceSymbolIndex();
 
-            Uri docsRootDirUri = Downloader.CppReferenceDocsExtractPath;
-            IEnumerable<string> cpprefFileList = Utils.GetFileListing(docsRootDirUri.AbsolutePath);
-            foreach (string filePath in cpprefFileList)
-                Console.WriteLine(@$"{nameof(Program)} : {filePath}");
+            //Uri docsRootDirUri = Downloader.CppReferenceDocsExtractPath;
+            //IEnumerable<string> cpprefFileList = Utils.GetFileListing(docsRootDirUri.AbsolutePath);
+            //foreach (string filePath in cpprefFileList)
+            //    Console.WriteLine(@$"{nameof(Program)} : {filePath}");
         }
     };
 }

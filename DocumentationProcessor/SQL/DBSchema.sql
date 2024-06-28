@@ -2,6 +2,7 @@
 create table symbols
 (
     id              integer     primary key,
+    name            text        default null,
     type            text        not null,
     filename        text        not null,
     namespace       text        default null

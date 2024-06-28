@@ -190,13 +190,8 @@ namespace DocumentationProcessor.Core {
         }
 
         private async Task PopulateIndexDB(SQLiteConnection connection) {
-            await foreach (Compound tag in this.ParseCppReferenceIndexTags()) {
-                // TODO: DEBUG - REMOVE
-                if (tag.Name == "memory" && tag.Type == "file")
-                    tag.Print();
-
+            await foreach (Compound tag in this.ParseCppReferenceIndexTags())
                 tag.InsertTableRecord(connection);
-            }
         }
 
         private async IAsyncEnumerable<Compound> ParseCppReferenceIndexTags() {
@@ -251,9 +246,10 @@ namespace DocumentationProcessor.Core {
 
             using XmlReader reader = XmlReader.Create(stream, settings);
             while (await reader.ReadAsync()) {
-                while (reader.ReadToFollowing(matchName))
+                while (reader.NodeType == XmlNodeType.Element && reader.Name == matchName) {
                     if (await XNode.ReadFromAsync(reader, CancellationToken.None) is XElement elem)
                         yield return elem;
+                }
             }
         }
     }

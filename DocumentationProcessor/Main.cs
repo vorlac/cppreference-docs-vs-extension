@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
 using System.IO.Compression;
-using System.Threading.Tasks;
 using DocumentationProcessor.Core;
 
 namespace DocumentationProcessor {
     internal static class Program {
-        private static async Task Main() {
+        private static void Main() {
             Uri docsDownloadUri = null;
 
             Uri downloadDirPath = Downloader.TempDataDir;
@@ -25,7 +24,7 @@ namespace DocumentationProcessor {
             //   3. Path normalization
             //   4. configurable temp & user data paths
             if (download && !Directory.Exists(userDataDirPath.AbsolutePath)) {
-                if (!Downloader.ValidateDownloadDirectory(downloadDirPath))
+                if (!Utils.ValidateDirectoryPath(downloadDirPath))
                     Console.WriteLine($@"Failed to validate temp data dir: {downloadDirPath.AbsolutePath}");
                 else if (!Downloader.DownloadContent(docsReleasesUri, cppDocsMetadata))
                     Console.WriteLine(@"Failed to download GitHub releases metadata for cppreference.com docs");
@@ -59,12 +58,11 @@ namespace DocumentationProcessor {
                 }
             }
 
-            Uri docsRootDirUri = Downloader.CppReferenceDocsExtractPath;
-            IAsyncEnumerable<Indexer.Compound> tags = Indexer.ParseCppReferenceIndexTags();
-            await foreach (Indexer.Compound tag in tags)
-                tag.Print();
+            Indexer indexer = new(Downloader.UserDataDir, Downloader.CppReferenceDocsExtractPath);
+            indexer.ParseAndIndexDocs();
 
-            IEnumerable<string> cpprefFileList = Indexer.GetFileListing(docsRootDirUri.AbsolutePath);
+            Uri docsRootDirUri = Downloader.CppReferenceDocsExtractPath;
+            IEnumerable<string> cpprefFileList = Utils.GetFileListing(docsRootDirUri.AbsolutePath);
             foreach (string filePath in cpprefFileList)
                 Console.WriteLine(@$"{nameof(Program)} : {filePath}");
         }

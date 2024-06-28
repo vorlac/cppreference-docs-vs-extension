@@ -33,6 +33,13 @@
     <PackageReference Include="Microsoft.Bcl.Build" Version="1.0.21" />
     <PackageReference Include="Microsoft.Extensions.Primitives" Version="8.0.0" />
     <PackageReference Include="Microsoft.Net.Http.Headers" Version="8.0.6" />
+    <PackageReference Include="Stub.System.Data.SQLite.Core.NetStandard" Version="1.0.118" />
+    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.118" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="SQL\DBSchema.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Compile Update="Properties\Resources.Designer.cs">

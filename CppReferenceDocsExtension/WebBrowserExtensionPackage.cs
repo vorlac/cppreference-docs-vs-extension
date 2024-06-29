@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using CppReferenceDocsExtension.Commands;
 using CppReferenceDocsExtension.Core.Utils;
 using CppReferenceDocsExtension.Settings;
-using CppReferenceDocsExtension.UI;
+using CppReferenceDocsExtension.Editor;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using Serilog;
@@ -14,11 +14,16 @@ using Serilog.Events;
 using Constants = CppReferenceDocsExtension.Core.Constants;
 
 namespace CppReferenceDocsExtension {
-    [Guid(PackageGuidString)]
     [PackageRegistration(UseManagedResourcesOnly = true, AllowsBackgroundLoading = true)]
     [InstalledProductRegistration("#110", "#112", "1.0", IconResourceID = 400)]
-    [ProvideMenuResource("Menus.ctmenu", 1)]
-    [ProvideToolWindow(typeof(WebBrowserWindow))]
+    [ProvideMenuResource("Menus.ctmenu", 1)] [Guid(PackageGuidString)]
+    [ProvideToolWindow(
+        typeof(WebBrowserWindow),
+        Style = VsDockStyle.Tabbed,
+        DockedWidth = 600,
+        Window = "DocumentWell",
+        Orientation = ToolWindowOrientation.Right
+    )]
     [ProvideOptionPage(typeof(WebBrowserOptionsPage), Constants.ExtensionName, "General", 0, 0, true)]
     [ProvideProfile(typeof(WebBrowserOptionsPage), Constants.ExtensionName, "General", 0, 0, true)]
     public sealed class WebBrowserExtensionPackage : AsyncPackage {

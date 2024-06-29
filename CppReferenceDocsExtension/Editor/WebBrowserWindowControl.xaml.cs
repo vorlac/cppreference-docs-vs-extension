@@ -12,20 +12,21 @@ using Microsoft.Web.WebView2.Core;
 using Microsoft.Web.WebView2.Wpf;
 using Serilog;
 using SD = System.Drawing;
+using WebViewInitCompletedEventArgs = Microsoft.Web.WebView2.Core.CoreWebView2InitializationCompletedEventArgs;
+using WebViewNavCompletedEventArgs = Microsoft.Web.WebView2.Core.CoreWebView2NavigationCompletedEventArgs;
+using WebViewCornerPlacement = Microsoft.Web.WebView2.Core.CoreWebView2DefaultDownloadDialogCornerAlignment;
 
-namespace CppReferenceDocsExtension.UI {
-    using WebViewInitCompletedEventArgs = CoreWebView2InitializationCompletedEventArgs;
-    using WebViewNavCompletedEventArgs = CoreWebView2NavigationCompletedEventArgs;
-    using WebViewCornerPlacement = CoreWebView2DefaultDownloadDialogCornerAlignment;
-
+namespace CppReferenceDocsExtension.Editor {
     public partial class WebBrowserWindowControl : UserControl {
+        private readonly ILogger log = Log.Logger;
+        private readonly List<CoreWebView2Frame> webViewFrames = new List<CoreWebView2Frame>();
         private CoreWebView2Environment environment;
 
         private bool isNavigating = false;
         private bool isFirstTimeLoad = true;
 
-        private readonly ILogger log = Log.Logger;
-        private readonly List<CoreWebView2Frame> webViewFrames = new List<CoreWebView2Frame>();
+        public IServiceProvider Services { get; set; }
+        public Action<string> SetTitleAction { get; set; }
 
         public WebBrowserWindowControl() {
             try {
@@ -42,15 +43,11 @@ namespace CppReferenceDocsExtension.UI {
             }
         }
 
-        public IServiceProvider Services { get; set; }
-        public Action<string> SetTitleAction { get; set; }
-
         private void InitializeAddressBar() {
             try {
                 this.addressBar.PreviewMouseLeftButtonDown += (s, e) => {
-                    if (this.addressBar.IsKeyboardFocusWithin) {
+                    if (this.addressBar.IsKeyboardFocusWithin)
                         return;
-                    }
 
                     // If the textbox is not yet focused, give it focus
                     // and stop further processing of this click event.

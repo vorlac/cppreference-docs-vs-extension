@@ -56,17 +56,19 @@
     <Compile Include="Core\Utils\OutputPaneEventSink.cs" />
     <Compile Include="Core\Utils\ServiceHelper.cs" />
     <Compile Include="Core\Utils\UriHelper.cs" />
+    <Compile Include="Editor\DocsToolTipAsyncSourceProvider.cs" />
+    <Compile Include="Editor\DocsToolTipAsyncSource.cs" />
     <Compile Include="WebBrowserExtensionPackage.cs" />
-    <Compile Include="UI\WebBrowserOptionsPage.cs">
+    <Compile Include="Editor\WebBrowserOptionsPage.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="UI\WebBrowserOptionsPageControl.xaml.cs">
+    <Compile Include="Editor\WebBrowserOptionsPageControl.xaml.cs">
       <DependentUpon>WebBrowserOptionsPageControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI\WebBrowserWindow.cs" />
+    <Compile Include="Editor\WebBrowserWindow.cs" />
     <Compile Include="Commands\WebBrowserCommand.cs" />
-    <Compile Include="UI\WebBrowserWindowControl.commands.cs" />
-    <Compile Include="UI\WebBrowserWindowControl.xaml.cs">
+    <Compile Include="Editor\WebBrowserWindowControl.commands.cs" />
+    <Compile Include="Editor\WebBrowserWindowControl.xaml.cs">
       <DependentUpon>WebBrowserWindowControl.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
@@ -109,11 +111,11 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="UI\WebBrowserOptionsPageControl.xaml">
+    <Page Include="Editor\WebBrowserOptionsPageControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UI\WebBrowserWindowControl.xaml">
+    <Page Include="Editor\WebBrowserWindowControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

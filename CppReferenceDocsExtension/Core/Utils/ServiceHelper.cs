@@ -1,5 +1,5 @@
 ﻿using System;
-using CppReferenceDocsExtension.UI;
+using CppReferenceDocsExtension.Editor;
 using Microsoft;
 using Microsoft.VisualStudio.ComponentModelHost;
 using Microsoft.VisualStudio.Shell;
@@ -15,7 +15,6 @@ namespace CppReferenceDocsExtension.Core.Utils {
                 IComponentModel componentModel = sp.GetService<SComponentModel, IComponentModel>();
                 var result = componentModel.GetService<T>();
                 Assumes.Present(result);
-
                 return result;
             }
             catch (Exception ex) {

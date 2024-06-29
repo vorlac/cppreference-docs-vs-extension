@@ -1,14 +1,13 @@
 ﻿using System.ComponentModel;
 using System.Runtime.InteropServices;
 using System.Windows;
-using CppReferenceDocsExtension.Core.Utils;
-using CppReferenceDocsExtension.Settings;
 using Microsoft.VisualStudio.Shell;
 using Serilog;
+using CppReferenceDocsExtension.Core.Utils;
+using CppReferenceDocsExtension.Settings;
 
-namespace CppReferenceDocsExtension.UI {
-    [ComVisible(true)]
-    [Guid("6a23a02d-5801-4562-b257-b58370eb4e32")]
+namespace CppReferenceDocsExtension.Editor {
+    [ComVisible(true)] [Guid("6a23a02d-5801-4562-b257-b58370eb4e32")]
     public sealed class WebBrowserOptionsPage : UIElementDialogPage {
         private WebBrowserOptionsPageControl control;
         private readonly ILogger log = Log.Logger;
@@ -17,7 +16,9 @@ namespace CppReferenceDocsExtension.UI {
             this.control = control;
         }
 
-        protected override UIElement Child => this.control ?? (this.control = new WebBrowserOptionsPageControl());
+        protected override UIElement Child =>
+            this.control
+         ?? (this.control = new WebBrowserOptionsPageControl());
 
         protected override void OnActivate(CancelEventArgs e) {
             this.log.Debug($"{nameof(WebBrowserOptionsPage)}: OnActivate(Cancel: {e.Cancel})");

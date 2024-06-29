@@ -5,7 +5,7 @@ using CppReferenceDocsExtension.Core.Utils;
 using Microsoft.Web.WebView2.Core;
 using Serilog;
 
-namespace CppReferenceDocsExtension.UI {
+namespace CppReferenceDocsExtension.Editor {
     partial class WebBrowserWindowControl {
         private async Task<T> GetCoreWebView2ValueAsync<T>(Func<CoreWebView2, T> func) {
             await this.webView.EnsureCoreWebView2Async();

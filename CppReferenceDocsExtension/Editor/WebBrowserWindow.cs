@@ -7,7 +7,7 @@ using Microsoft.Web.WebView2.Wpf;
 using Serilog;
 using Constants = CppReferenceDocsExtension.Core.Constants;
 
-namespace CppReferenceDocsExtension.UI {
+namespace CppReferenceDocsExtension.Editor {
     [Guid("8ab2cef3-7c52-4e4a-8d07-1dd7f9f90a1c")]
     public sealed class WebBrowserWindow : ToolWindowPane, IVsWindowFrameNotify2 {
         private readonly WebBrowserWindowControl control;

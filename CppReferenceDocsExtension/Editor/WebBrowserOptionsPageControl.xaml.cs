@@ -1,7 +1,7 @@
 ﻿using System.Windows.Controls;
 using CppReferenceDocsExtension.Settings;
 
-namespace CppReferenceDocsExtension.UI {
+namespace CppReferenceDocsExtension.Editor {
     public partial class WebBrowserOptionsPageControl : UserControl {
         public WebBrowserOptionsPageControl() {
             this.InitializeComponent();

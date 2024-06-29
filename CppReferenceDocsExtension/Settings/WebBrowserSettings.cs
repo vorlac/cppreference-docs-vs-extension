@@ -14,6 +14,7 @@ namespace CppReferenceDocsExtension.Settings {
     public sealed class WebBrowserSettings : IWebBrowserSettings {
         private const string DefaultHomePage = @"https://www.cppreference.com/";
         private const string SettingsKey = nameof(WebBrowserSettings);
+
         private readonly ILogger log = Log.Logger;
 
         private readonly WritableSettingsStore settingsStore;

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.Design;
 using System.Threading.Tasks;
-using CppReferenceDocsExtension.UI;
+using CppReferenceDocsExtension.Editor;
 using EnvDTE;
 using Microsoft.VisualStudio.Shell;
 using Serilog;
@@ -11,7 +11,7 @@ namespace CppReferenceDocsExtension.Commands {
         private const int CommandId = 0x0100;
         // public const int WebBrowserWindowNavigateId = 0x101;
         // public const int WebBrowserWindowToolbarID = 0x1000;
-        // private readonly DTE dte;
+        private readonly DTE dte;
 
         private static readonly Guid SCommandSet = new Guid("48c3fadd-683b-4577-8583-c9817b4e5a50");
         private readonly ILogger log = Log.Logger;
@@ -21,7 +21,7 @@ namespace CppReferenceDocsExtension.Commands {
 
         private WebBrowserCommand(AsyncPackage asyncPackage, DTE dteInstance, OleMenuCommandService commandService) {
             this.package = asyncPackage ?? throw new ArgumentNullException(nameof(asyncPackage));
-            DTE dte = dteInstance ?? throw new ArgumentNullException(nameof(dteInstance));
+            this.dte = dteInstance ?? throw new ArgumentNullException(nameof(dteInstance));
             commandService = commandService ?? throw new ArgumentNullException(nameof(commandService));
             var menuCommandID = new CommandID(SCommandSet, CommandId);
             var menuItem = new MenuCommand(this.Execute, menuCommandID);

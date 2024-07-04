@@ -17,7 +17,7 @@ namespace CppReferenceDocsExtension {
     [InstalledProductRegistration("#110", "#112", "1.0", IconResourceID = 400)]
     [ProvideMenuResource("Menus.ctmenu", 1)] [Guid(PackageGuidString)]
     [ProvideToolWindow(
-        typeof(WebBrowserWindow),
+        typeof(DocsPanelBrowserWindow),
         Style = VsDockStyle.Tabbed,
         DockedWidth = 600,
         Window = "DocumentWell",
@@ -25,12 +25,12 @@ namespace CppReferenceDocsExtension {
     )]
     [ProvideOptionPage(typeof(DialogPageProvider.General), Constants.ExtensionName, "General", 0, 0, true)]
     [ProvideOptionPage(typeof(DialogPageProvider.Other), Constants.ExtensionName, "Other", 0, 0, true)]
-    public sealed class WebBrowserExtensionPackage : AsyncPackage {
+    public sealed class CppReferenceDocsExtensionPackage : AsyncPackage {
         private const string PackageGuidString = "1ba34956-275f-48c6-889b-a8834db18c23";
 
         protected override async Task InitializeAsync(CancellationToken cancellationToken, IProgress<ServiceProgressData> progress) {
             await this.JoinableTaskFactory.SwitchToMainThreadAsync();
-            await WebBrowserCommand.InitializeAsync(this);
+            await DocsPanelBrowserCommand.InitializeAsync(this);
             this.InitializeLogging();
         }
 
@@ -47,7 +47,7 @@ namespace CppReferenceDocsExtension {
             }
             catch (Exception ex) {
                 exception = ex;
-                message = $"{nameof(WebBrowserExtensionPackage)}.{nameof(this.InitializeLogging)}(): "
+                message = $"{nameof(CppReferenceDocsExtensionPackage)}.{nameof(this.InitializeLogging)}(): "
                         + $"Could not retrieve Logging Configuration";
             }
 

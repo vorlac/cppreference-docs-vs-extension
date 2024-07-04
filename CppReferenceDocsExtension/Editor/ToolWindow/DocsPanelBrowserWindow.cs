@@ -9,16 +9,16 @@ using Constants = CppReferenceDocsExtension.Core.Constants;
 
 namespace CppReferenceDocsExtension.Editor.ToolWindow {
     [Guid("8ab2cef3-7c52-4e4a-8d07-1dd7f9f90a1c")]
-    public sealed class WebBrowserWindow : ToolWindowPane, IVsWindowFrameNotify2 {
-        private readonly WebBrowserWindowControl control;
+    public sealed class DocsPanelBrowserWindow : ToolWindowPane, IVsWindowFrameNotify2 {
+        private readonly DocsPanelBrowserWindowControl control;
         private readonly WebView2 webView;
         private readonly DTE dte;
 
         private readonly ILogger log = Log.Logger;
 
-        public WebBrowserWindow() : base(null) {
+        public DocsPanelBrowserWindow() : base(null) {
             this.Caption = Constants.ExtensionName;
-            this.control = new WebBrowserWindowControl {
+            this.control = new DocsPanelBrowserWindowControl {
                 SetTitleAction = x =>
                     this.Caption = x
             };
@@ -34,24 +34,24 @@ namespace CppReferenceDocsExtension.Editor.ToolWindow {
         }
 
         public int OnClose(ref uint pgrfSaveOptions) {
-            this.log.Debug($"{nameof(WebBrowserWindow)}: OnClose({pgrfSaveOptions})");
+            this.log.Debug($"{nameof(DocsPanelBrowserWindow)}: OnClose({pgrfSaveOptions})");
             return VSConstants.S_OK;
         }
 
         public override void OnToolWindowCreated() {
             base.OnToolWindowCreated();
-            this.log.Debug($"{nameof(WebBrowserWindow)}: OnToolWindowCreated()");
+            this.log.Debug($"{nameof(DocsPanelBrowserWindow)}: OnToolWindowCreated()");
         }
 
         protected override void Initialize() {
-            this.log.Verbose($"Initializing {nameof(WebBrowserWindow)}");
+            this.log.Verbose($"Initializing {nameof(DocsPanelBrowserWindow)}");
             base.Initialize();
             this.control.Services = this;
-            this.log.Verbose($"Initialized {nameof(WebBrowserWindow)}");
+            this.log.Verbose($"Initialized {nameof(DocsPanelBrowserWindow)}");
         }
 
         private void OnVisualStudioShutDown() {
-            this.log.Debug($"{nameof(WebBrowserWindow)}: Visual Studio is closing");
+            this.log.Debug($"{nameof(DocsPanelBrowserWindow)}: Visual Studio is closing");
             this.CleanupControl();
         }
 

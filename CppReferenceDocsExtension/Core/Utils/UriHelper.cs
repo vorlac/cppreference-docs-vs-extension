@@ -19,11 +19,9 @@ namespace CppReferenceDocsExtension.Core.Utils {
                    .Split(new[] { @"%20" }, StringSplitOptions.RemoveEmptyEntries);
 
             return new Uri(
-                string.Join(
-                    "https://www.google.com/search?q=",
-                    sanitizedUri,
-                    "+site:cppreference.com"
-                )
+                $@"https://www.google.com/search?q={
+                    string.Join("+", sanitizedUri)
+                }+site:cppreference.com"
             );
         }
     }

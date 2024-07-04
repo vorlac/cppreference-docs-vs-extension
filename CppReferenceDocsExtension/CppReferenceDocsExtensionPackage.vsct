@@ -4,10 +4,10 @@
     <Extern href="stdidcmd.h"/>
     <Extern href="vsshlids.h"/>
 
-    <Commands package="guidWebBrowserExtensionPackage">
+    <Commands package="guidCppReferenceDocsExtensionPackage">
         <Buttons>
-            <Button guid="guidWebBrowserExtensionPackageCmdSet"
-                    id="WebBrowserWindowCommandId"
+            <Button guid="guidCppReferenceDocsExtensionPackageCmdSet"
+                    id="DocsPanelBrowserWindowCommandId"
                     priority="0x0100"
                     type="Button">
                 <Parent guid="guidSHLMainMenu" id="IDG_VS_WNDO_OTRWNDWS1" />
@@ -25,10 +25,10 @@
     </Commands>
 
     <Symbols>
-        <GuidSymbol name="guidWebBrowserExtensionPackage" value="{1ba34956-275f-48c6-889b-a8834db18c23}" />
+        <GuidSymbol name="guidCppReferenceDocsExtensionPackage" value="{1ba34956-275f-48c6-889b-a8834db18c23}" />
 
-        <GuidSymbol name="guidWebBrowserExtensionPackageCmdSet" value="{48c3fadd-683b-4577-8583-c9817b4e5a50}">
-            <IDSymbol name="WebBrowserWindowCommandId" value="0x0100" />
+        <GuidSymbol name="guidCppReferenceDocsExtensionPackageCmdSet" value="{48c3fadd-683b-4577-8583-c9817b4e5a50}">
+            <IDSymbol name="DocsPanelBrowserWindowCommandId" value="0x0100" />
         </GuidSymbol>
 
         <GuidSymbol name="guidImages" value="{4b371d22-ef5e-4ea3-9ce4-d4903129d549}" >

@@ -17,7 +17,7 @@ using WebViewNavCompletedEventArgs = Microsoft.Web.WebView2.Core.CoreWebView2Nav
 using WebViewCornerPlacement = Microsoft.Web.WebView2.Core.CoreWebView2DefaultDownloadDialogCornerAlignment;
 
 namespace CppReferenceDocsExtension.Editor.ToolWindow {
-    public partial class WebBrowserWindowControl : UserControl {
+    public partial class DocsPanelBrowserWindowControl : UserControl {
         private readonly ILogger log = Log.Logger;
         private readonly List<CoreWebView2Frame> webViewFrames = new List<CoreWebView2Frame>();
         private CoreWebView2Environment environment;
@@ -28,7 +28,7 @@ namespace CppReferenceDocsExtension.Editor.ToolWindow {
         public IServiceProvider Services { get; set; }
         public Action<string> SetTitleAction { get; set; }
 
-        public WebBrowserWindowControl() {
+        public DocsPanelBrowserWindowControl() {
             try {
                 this.InitializeComponent();
                 this.InitializeAddressBar();
@@ -163,7 +163,7 @@ namespace CppReferenceDocsExtension.Editor.ToolWindow {
         }
 
         private static void HandleError(string message, Exception exception = null) {
-            Log.Error(exception, $"{nameof(WebBrowserWindowControl)} - {message}");
+            Log.Error(exception, $"{nameof(DocsPanelBrowserWindowControl)} - {message}");
         }
 
         private void WebBrowserWindowControl_Unloaded(object sender, RoutedEventArgs e) {

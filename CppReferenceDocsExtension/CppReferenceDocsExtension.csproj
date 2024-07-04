@@ -63,12 +63,12 @@
     <Compile Include="Core\Utils\UriHelper.cs" />
     <Compile Include="Editor\ToolTip\DocsToolTipAsyncSourceProvider.cs" />
     <Compile Include="Editor\ToolTip\DocsToolTipAsyncSource.cs" />
-    <Compile Include="WebBrowserExtensionPackage.cs" />
-    <Compile Include="Editor\ToolWindow\WebBrowserWindow.cs" />
-    <Compile Include="Editor\ToolWindow\WebBrowserCommand.cs" />
-    <Compile Include="Editor\ToolWindow\WebBrowserWindowControl.commands.cs" />
-    <Compile Include="Editor\ToolWindow\WebBrowserWindowControl.xaml.cs">
-      <DependentUpon>WebBrowserWindowControl.xaml</DependentUpon>
+    <Compile Include="CppReferenceDocsExtensionPackage.cs" />
+    <Compile Include="Editor\ToolWindow\DocsPanelBrowserWindow.cs" />
+    <Compile Include="Editor\ToolWindow\DocsPanelBrowserCommand.cs" />
+    <Compile Include="Editor\ToolWindow\DocsPanelBrowserWindowControl.commands.cs" />
+    <Compile Include="Editor\ToolWindow\DocsPanelBrowserWindowControl.xaml.cs">
+      <DependentUpon>DocsPanelBrowserWindowControl.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -110,7 +110,7 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Editor\ToolWindow\WebBrowserWindowControl.xaml">
+    <Page Include="Editor\ToolWindow\DocsPanelBrowserWindowControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -121,7 +121,7 @@
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <Content Include="Resources\Assets\WebBrowserCommand.png" />
-    <VSCTCompile Include="WebBrowserExtensionPackage.vsct">
+    <VSCTCompile Include="CppReferenceDocsExtensionPackage.vsct">
       <ResourceName>Menus.ctmenu</ResourceName>
     </VSCTCompile>
   </ItemGroup>

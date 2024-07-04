@@ -1,12 +1,11 @@
 ﻿using System;
 using System.ComponentModel.Design;
 using System.Threading.Tasks;
-using CppReferenceDocsExtension.Editor;
 using EnvDTE;
 using Microsoft.VisualStudio.Shell;
 using Serilog;
 
-namespace CppReferenceDocsExtension.Commands {
+namespace CppReferenceDocsExtension.Editor.ToolWindow {
     internal sealed class WebBrowserCommand {
         private const int CommandId = 0x0100;
         // public const int WebBrowserWindowNavigateId = 0x101;

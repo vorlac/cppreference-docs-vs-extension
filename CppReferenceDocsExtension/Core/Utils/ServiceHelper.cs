@@ -1,5 +1,4 @@
 ﻿using System;
-using CppReferenceDocsExtension.Editor;
 using Microsoft;
 using Microsoft.VisualStudio.ComponentModelHost;
 using Microsoft.VisualStudio.Shell;
@@ -20,8 +19,7 @@ namespace CppReferenceDocsExtension.Core.Utils {
             catch (Exception ex) {
                 SLog.Error(
                     ex,
-                    $"{nameof(WebBrowserOptionsPage)}: "
-                  + $"Could not retrieve an instance of Service {typeof(T)}"
+                    $"Could not retrieve an instance of Service {typeof(T)}"
                 );
 
                 throw;

@@ -12,15 +12,17 @@ namespace CppReferenceDocsExtension.Core.Utils {
             if (!rawUrl.Contains(" ") && rawUrl.Contains("."))
                 return new Uri(@"http://" + rawUrl);
 
-            // if it's still invalid at this point, just treat the input as a search string
-            string[] sanitizedUri = Uri.EscapeDataString(rawUrl)
-                                       .Split(new[] { @"%20" }, StringSplitOptions.RemoveEmptyEntries);
+            // if it's still invalid at this point,
+            // just treat the input as a search string
+            string[] sanitizedUri =
+                Uri.EscapeDataString(rawUrl)
+                   .Split(new[] { @"%20" }, StringSplitOptions.RemoveEmptyEntries);
 
             return new Uri(
                 string.Join(
-                    @"https://www.google.com/search?q=",
+                    "https://www.google.com/search?q=",
                     sanitizedUri,
-                    @"+site:cppreference.com"
+                    "+site:cppreference.com"
                 )
             );
         }

@@ -8,7 +8,7 @@ using Microsoft.VisualStudio.Language.StandardClassification;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Adornments;
 
-namespace CppReferenceDocsExtension.Editor {
+namespace CppReferenceDocsExtension.Editor.ToolTip {
     internal sealed class DocsToolTipAsyncSource : IAsyncQuickInfoSource {
         private static readonly ImageId Icon = KnownMonikers.AbstractCube.ToImageId();
         private readonly ITextBuffer textBuffer;

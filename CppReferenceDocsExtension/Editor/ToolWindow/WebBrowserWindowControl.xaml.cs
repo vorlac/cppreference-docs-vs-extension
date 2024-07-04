@@ -7,7 +7,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using CppReferenceDocsExtension.Core.Utils;
-using CppReferenceDocsExtension.Settings;
+using CppReferenceDocsExtension.Editor.Settings;
 using Microsoft.Web.WebView2.Core;
 using Microsoft.Web.WebView2.Wpf;
 using Serilog;
@@ -16,7 +16,7 @@ using WebViewInitCompletedEventArgs = Microsoft.Web.WebView2.Core.CoreWebView2In
 using WebViewNavCompletedEventArgs = Microsoft.Web.WebView2.Core.CoreWebView2NavigationCompletedEventArgs;
 using WebViewCornerPlacement = Microsoft.Web.WebView2.Core.CoreWebView2DefaultDownloadDialogCornerAlignment;
 
-namespace CppReferenceDocsExtension.Editor {
+namespace CppReferenceDocsExtension.Editor.ToolWindow {
     public partial class WebBrowserWindowControl : UserControl {
         private readonly ILogger log = Log.Logger;
         private readonly List<CoreWebView2Frame> webViewFrames = new List<CoreWebView2Frame>();
@@ -68,7 +68,7 @@ namespace CppReferenceDocsExtension.Editor {
                 // See https://github.com/MicrosoftEdge/WebView2Feedback/issues/271
                 string userDataFolder = Path.Combine(
                     Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-                    "VS2022WebBrowserExtension"
+                    "VS2022CppRefDocsExtension"
                 );
 
                 this.environment = await CoreWebView2Environment.CreateAsync(null, userDataFolder);
@@ -197,7 +197,7 @@ namespace CppReferenceDocsExtension.Editor {
 
         private async Task NavigateToHomeAsync() {
             try {
-                var settings = this.GetService<IWebBrowserSettings>();
+                var settings = await GeneralOptions.GetLiveInstanceAsync();
                 Uri homepage = settings.GetHomePageUri();
                 Log.Verbose($"Home Page Uri is '{homepage}'");
                 await this.NavigateToAsync(homepage);

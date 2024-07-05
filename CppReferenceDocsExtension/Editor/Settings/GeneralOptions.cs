@@ -3,8 +3,10 @@ using System.ComponentModel;
 using CppReferenceDocsExtension.Core.Utils;
 using Serilog.Events;
 
-namespace CppReferenceDocsExtension.Editor.Settings {
-    internal class GeneralOptions : BaseOptionModel<GeneralOptions> {
+namespace CppReferenceDocsExtension.Editor.Settings
+{
+    internal class GeneralOptions : BaseOptionModel<GeneralOptions>
+    {
         [Category("General")]
         [DisplayName("Logging Level")]
         [Description("Controls the extension's logging verbosity")]
@@ -19,7 +21,8 @@ namespace CppReferenceDocsExtension.Editor.Settings {
         public string HomePage { get; set; } = "https://www.cppreference.com";
     }
 
-    internal static class WebBrowserSettingsExtensions {
+    internal static class WebBrowserSettingsExtensions
+    {
         public static Uri GetHomePageUri(this GeneralOptions settings) {
             return UriHelper.MakeUri(settings.HomePage);
         }

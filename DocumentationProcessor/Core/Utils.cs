@@ -3,8 +3,10 @@ using System;
 using System.Collections.Generic;
 using DocumentationProcessor.Properties;
 
-namespace DocumentationProcessor.Core {
-    public static class Utils {
+namespace DocumentationProcessor.Core
+{
+    public static class Utils
+    {
         private static bool CreateDirectory(Uri dirPath) {
             string tempDownloadDir = dirPath.ToString();
             Console.WriteLine(@$"Creating directory: {tempDownloadDir}");

@@ -4,8 +4,10 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using DocumentationProcessor.Properties;
 
-namespace DocumentationProcessor.Core {
-    internal static class Downloader {
+namespace DocumentationProcessor.Core
+{
+    internal static class Downloader
+    {
         public static readonly Uri TempDataDir =
             new(Resources.TempDataDir ?? Path.GetTempPath());
         public static readonly Uri UserDataDir =
@@ -21,7 +23,7 @@ namespace DocumentationProcessor.Core {
             new(Resources.CppRefDocsReleasesAPI);
 
         public static bool DownloadContent(Uri downloadUri, Uri saveFileUri) {
-            using var client = new HttpClient { DefaultRequestHeaders = { { "User-Agent", "none" } } };
+            using HttpClient client = new HttpClient { DefaultRequestHeaders = { { "User-Agent", "none" } } };
             using Task<Stream> s = client.GetStreamAsync(downloadUri);
             using FileStream fs = new(saveFileUri.AbsolutePath, FileMode.OpenOrCreate);
             s.Result.CopyTo(fs);

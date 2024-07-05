@@ -8,8 +8,10 @@ using Serilog.Events;
 using Serilog.Formatting;
 using Serilog.Formatting.Display;
 
-namespace CppReferenceDocsExtension.Core.Utils {
-    internal sealed class OutputPaneEventSink : ILogEventSink {
+namespace CppReferenceDocsExtension.Core.Utils
+{
+    internal sealed class OutputPaneEventSink : ILogEventSink
+    {
         private static readonly Guid SPaneGuid = new Guid("8851EA3E-6283-4C9A-B31B-97D26037E6D3");
 
         private readonly IVsOutputWindowPane pane;
@@ -23,7 +25,7 @@ namespace CppReferenceDocsExtension.Core.Utils {
         }
 
         public void Emit(LogEvent logEvent) {
-            var sw = new StringWriter();
+            StringWriter sw = new StringWriter();
             this.formatter.Format(logEvent, sw);
             string message = sw.ToString();
 

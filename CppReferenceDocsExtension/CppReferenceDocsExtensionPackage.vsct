@@ -1,43 +1,53 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <CommandTable xmlns="http://schemas.microsoft.com/VisualStudio/2005-10-18/CommandTable"
-              xmlns:xs="http://www.w3.org/2001/XMLSchema">
-    <Extern href="stdidcmd.h"/>
-    <Extern href="vsshlids.h"/>
+    xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <Extern href="stdidcmd.h" />
+    <Extern href="vsshlids.h" />
 
     <Commands package="guidCppReferenceDocsExtensionPackage">
+        <Groups>
+            <Group guid="guidCppReferenceDocsExtensionPackageCmdSet" id="CppReferenceDocsMenuGroup" priority="0x0600">
+                <Parent guid="guidSHLMainMenu" id="IDM_VS_MENU_TOOLS" />
+            </Group>
+        </Groups>
+
         <Buttons>
-            <Button guid="guidCppReferenceDocsExtensionPackageCmdSet"
-                    id="DocsPanelBrowserWindowCommandId"
-                    priority="0x0100"
-                    type="Button">
-                <Parent guid="guidSHLMainMenu" id="IDG_VS_WNDO_OTRWNDWS1" />
-                <Icon guid="guidImages" id="bmpPic1" />
+            <Button guid="guidCppReferenceDocsExtensionPackageCmdSet" id="DocsPanelBrowserWindowCommandId" priority="0x0100" type="Button">
+                <Parent guid="guidCppReferenceDocsExtensionPackageCmdSet" id="CppReferenceDocsMenuGroup" />
+                <Icon guid="guidCppIcon" id="bmpCppIcon" />
                 <Strings>
                     <ButtonText>CppReference Docs</ButtonText>
                 </Strings>
             </Button>
         </Buttons>
+
         <Bitmaps>
-            <Bitmap guid="guidImages"
-                    href="Resources\Assets\WebBrowserCommand.png"
-                    usedList="bmpPic1, bmpPic2, bmpPicSearch, bmpPicX, bmpPicArrows, bmpPicStrikethrough"/>
+            <Bitmap guid="guidImages" href="Resources\Assets\web-browser-icons.png"
+                    usedList="bmpPic1, bmpPic2, bmpPicSearch, bmpPicX, bmpPicArrows, bmpPicStrikethrough" />
+            <Bitmap guid="guidCppIcon" href="Resources\Assets\cpp-icon.png"
+                    usedList="bmpCppIcon" />
         </Bitmaps>
     </Commands>
 
     <Symbols>
-        <GuidSymbol name="guidCppReferenceDocsExtensionPackage" value="{1ba34956-275f-48c6-889b-a8834db18c23}" />
+        <GuidSymbol name="guidCppReferenceDocsExtensionPackage" value="{deadbeef-feee-feee-cdcd-000000000000}" />
 
-        <GuidSymbol name="guidCppReferenceDocsExtensionPackageCmdSet" value="{48c3fadd-683b-4577-8583-c9817b4e5a50}">
+        <GuidSymbol name="guidCppReferenceDocsExtensionPackageCmdSet" value="{deadbeef-feee-feee-cdcd-000000000002}">
+            <IDSymbol name="CppReferenceDocsMenuGroup" value="0x1020" />
             <IDSymbol name="DocsPanelBrowserWindowCommandId" value="0x0100" />
         </GuidSymbol>
 
-        <GuidSymbol name="guidImages" value="{4b371d22-ef5e-4ea3-9ce4-d4903129d549}" >
+        <GuidSymbol name="guidImages" value="{deadbeef-feee-feee-cdcd-000000000003}">
             <IDSymbol name="bmpPic1" value="1" />
             <IDSymbol name="bmpPic2" value="2" />
             <IDSymbol name="bmpPicSearch" value="3" />
             <IDSymbol name="bmpPicX" value="4" />
             <IDSymbol name="bmpPicArrows" value="5" />
             <IDSymbol name="bmpPicStrikethrough" value="6" />
+        </GuidSymbol>
+
+        <GuidSymbol name="guidCppIcon" value="{deadbeef-feee-feee-cdcd-000000000004}">
+            <IDSymbol name="bmpCppIcon" value="1" />
         </GuidSymbol>
     </Symbols>
 </CommandTable>

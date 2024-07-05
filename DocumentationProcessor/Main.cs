@@ -1,13 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
 using System.IO.Compression;
 using DocumentationProcessor.Core;
 using DocumentationProcessor.Properties;
 
-namespace DocumentationProcessor {
-    internal static class Program {
+namespace DocumentationProcessor
+{
+    internal static class Program
+    {
         private static void Main() {
             Uri docsDownloadUri = null;
 
@@ -38,7 +39,7 @@ namespace DocumentationProcessor {
                         string name = elem.GetProperty("name").ToString();
                         if (name.StartsWith("html-book") && name.EndsWith(".zip")) {
                             string downloadURL = elem.GetProperty("browser_download_url").ToString();
-                            docsDownloadUri = new Uri(downloadURL);
+                            docsDownloadUri = new(downloadURL);
                             if (!docsDownloadUri.IsAbsoluteUri)
                                 Console.WriteLine(@"Failed to parse latest release assets json metadata");
 

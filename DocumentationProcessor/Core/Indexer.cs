@@ -9,8 +9,10 @@ using System.Data.Common;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace DocumentationProcessor.Core {
-    public sealed class Indexer(Uri userDataDir, Uri cppRefDocsDir) {
+namespace DocumentationProcessor.Core
+{
+    public sealed class Indexer(Uri userDataDir, Uri cppRefDocsDir)
+    {
         private SQLiteConnection Database { get; set; }
         private Uri UserDataDir { get; } = userDataDir;
         private Uri DocsRootDir { get; } = cppRefDocsDir;
@@ -41,7 +43,7 @@ namespace DocumentationProcessor.Core {
 
             try {
                 SQLiteConnection.CreateFile(dbPath);
-                this.Database = new SQLiteConnection(connectionString);
+                this.Database = new(connectionString);
                 this.Database.Open();
             }
             catch (Exception e) {
@@ -111,7 +113,7 @@ namespace DocumentationProcessor.Core {
                 IgnoreWhitespace = true
             };
 
-            using var reader = XmlReader.Create(stream, settings);
+            using XmlReader reader = XmlReader.Create(stream, settings);
             while (await reader.ReadAsync()) {
                 while (reader.NodeType == XmlNodeType.Element && reader.Name == matchName) {
                     if (await XNode.ReadFromAsync(reader, CancellationToken.None) is XElement elem)

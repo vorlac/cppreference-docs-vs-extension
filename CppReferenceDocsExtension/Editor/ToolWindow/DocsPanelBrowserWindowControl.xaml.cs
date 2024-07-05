@@ -4,20 +4,22 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
 using CppReferenceDocsExtension.Core.Utils;
 using CppReferenceDocsExtension.Editor.Settings;
 using Microsoft.Web.WebView2.Core;
 using Microsoft.Web.WebView2.Wpf;
 using Serilog;
+//
 using SD = System.Drawing;
 using WebViewInitCompletedEventArgs = Microsoft.Web.WebView2.Core.CoreWebView2InitializationCompletedEventArgs;
 using WebViewNavCompletedEventArgs = Microsoft.Web.WebView2.Core.CoreWebView2NavigationCompletedEventArgs;
 using WebViewCornerPlacement = Microsoft.Web.WebView2.Core.CoreWebView2DefaultDownloadDialogCornerAlignment;
 
-namespace CppReferenceDocsExtension.Editor.ToolWindow {
-    public partial class DocsPanelBrowserWindowControl : UserControl {
+namespace CppReferenceDocsExtension.Editor.ToolWindow
+{
+    public partial class DocsPanelBrowserWindowControl
+    {
         private readonly ILogger log = Log.Logger;
         private readonly List<CoreWebView2Frame> webViewFrames = new List<CoreWebView2Frame>();
         private CoreWebView2Environment environment;
@@ -108,8 +110,7 @@ namespace CppReferenceDocsExtension.Editor.ToolWindow {
             RequeryCommands();
         }
 
-        private void OnCoreWebView2InitializationCompleted(object sender,
-                                                           WebViewInitCompletedEventArgs e) {
+        private void OnCoreWebView2InitializationCompleted(object sender, WebViewInitCompletedEventArgs e) {
             if (!e.IsSuccess) {
                 HandleError(
                     $"WebView2 creation failed: {e.InitializationException.Message}",
@@ -145,7 +146,7 @@ namespace CppReferenceDocsExtension.Editor.ToolWindow {
                 const int defaultMarginY = 0;
                 const WebViewCornerPlacement cornerAlignment = WebViewCornerPlacement.TopLeft;
 
-                var margin = new SD.Point(defaultMarginX, defaultMarginY);
+                SD.Point margin = new SD.Point(defaultMarginX, defaultMarginY);
                 this.webView.CoreWebView2.DefaultDownloadDialogCornerAlignment = cornerAlignment;
                 this.webView.CoreWebView2.DefaultDownloadDialogMargin = margin;
             }
@@ -197,7 +198,7 @@ namespace CppReferenceDocsExtension.Editor.ToolWindow {
 
         private async Task NavigateToHomeAsync() {
             try {
-                var settings = await GeneralOptions.GetLiveInstanceAsync();
+                GeneralOptions settings = await GeneralOptions.GetLiveInstanceAsync();
                 Uri homepage = settings.GetHomePageUri();
                 Log.Verbose($"Home Page Uri is '{homepage}'");
                 await this.NavigateToAsync(homepage);

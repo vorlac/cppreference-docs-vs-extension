@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net8.0-windows</TargetFramework>
     <OutputType>Exe</OutputType>
     <GenerateAssemblyInfo>True</GenerateAssemblyInfo>
     <PublishAot>True</PublishAot>
@@ -11,6 +11,8 @@
   <PropertyGroup>
     <FindDependenciesOfExternallyResolvedReferences>true</FindDependenciesOfExternallyResolvedReferences>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <StartupObject>DocumentationProcessor.Program</StartupObject>
+    <NeutralLanguage>en-US</NeutralLanguage>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>

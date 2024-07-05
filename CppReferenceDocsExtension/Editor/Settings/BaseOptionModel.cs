@@ -13,15 +13,20 @@ using Microsoft.VisualStudio.Shell.Settings;
 using Microsoft.VisualStudio.Threading;
 using Task = System.Threading.Tasks.Task;
 
-namespace CppReferenceDocsExtension.Editor.Settings {
+namespace CppReferenceDocsExtension.Editor.Settings
+{
     internal abstract class BaseOptionModel<T>
-        where T : BaseOptionModel<T>, new() {
-        private static AsyncLazy<T> LiveModel =
+        where T : BaseOptionModel<T>, new()
+    {
+        protected BaseOptionModel() { }
+
+        private static readonly AsyncLazy<T> LiveModel =
             new AsyncLazy<T>(CreateAsync, ThreadHelper.JoinableTaskFactory);
-        private static AsyncLazy<ShellSettingsManager> SettingsManager =
+
+        private static readonly AsyncLazy<ShellSettingsManager> SettingsManager =
             new AsyncLazy<ShellSettingsManager>(GetSettingsManagerAsync, ThreadHelper.JoinableTaskFactory);
 
-        protected BaseOptionModel() { }
+        protected virtual string CollectionName { get; } = typeof(T).FullName;
 
         public static T Instance {
             get {
@@ -35,19 +40,16 @@ namespace CppReferenceDocsExtension.Editor.Settings {
         }
 
         public static async Task<T> CreateAsync() {
-            var instance = new T();
+            T instance = new T();
             await instance.LoadAsync();
             return instance;
         }
-
-        protected virtual string CollectionName { get; }
-            = typeof(T).FullName;
 
         public virtual void Load() {
             ThreadHelper.JoinableTaskFactory.Run(this.LoadAsync);
         }
 
-        public virtual async Task LoadAsync() {
+        protected virtual async Task LoadAsync() {
             ShellSettingsManager manager = await SettingsManager.GetValueAsync();
             SettingsStore settingsStore = manager.GetReadOnlySettingsStore(SettingsScope.UserSettings);
 
@@ -92,8 +94,8 @@ namespace CppReferenceDocsExtension.Editor.Settings {
         }
 
         protected virtual string SerializeValue(object value) {
-            using (var stream = new MemoryStream()) {
-                var formatter = new BinaryFormatter();
+            using (MemoryStream stream = new MemoryStream()) {
+                BinaryFormatter formatter = new BinaryFormatter();
                 formatter.Serialize(stream, value);
                 stream.Flush();
                 return Convert.ToBase64String(stream.ToArray());
@@ -103,14 +105,15 @@ namespace CppReferenceDocsExtension.Editor.Settings {
         protected virtual object DeserializeValue(string value, Type type) {
             byte[] b = Convert.FromBase64String(value);
 
-            using (var stream = new MemoryStream(b)) {
-                var formatter = new BinaryFormatter();
+            using (MemoryStream stream = new MemoryStream(b)) {
+                BinaryFormatter formatter = new BinaryFormatter();
                 return formatter.Deserialize(stream);
             }
         }
 
         private static async Task<ShellSettingsManager> GetSettingsManagerAsync() {
-            var svc = await AsyncServiceProvider.GlobalProvider.GetServiceAsync(
+            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+            IVsSettingsManager svc = await AsyncServiceProvider.GlobalProvider.GetServiceAsync(
                 typeof(SVsSettingsManager)
             ) as IVsSettingsManager;
 

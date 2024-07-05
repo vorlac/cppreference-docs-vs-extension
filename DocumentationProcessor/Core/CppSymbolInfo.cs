@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Data.SQLite;
 
-namespace DocumentationProcessor.Core {
-    public class CppSymbolInfo {
+namespace DocumentationProcessor.Core
+{
+    public class CppSymbolInfo
+    {
         public string Type { get; init; }
         public string Name { get; init; }
         public string FileName { get; init; }
@@ -10,7 +12,8 @@ namespace DocumentationProcessor.Core {
         public List<Member> Members { get; } = [];
         public List<Class> Classes { get; } = [];
 
-        public class Member {
+        public class Member
+        {
             public string Type { get; init; }
             public string Name { get; init; }
             public string AnchorFile { get; init; }
@@ -18,7 +21,8 @@ namespace DocumentationProcessor.Core {
             public string ArgList { get; init; }
         }
 
-        public class Class {
+        public class Class
+        {
             public string Type { get; init; }
             public string Name { get; init; }
         }
@@ -46,7 +50,7 @@ namespace DocumentationProcessor.Core {
                         _          => null
                     };
 
-                    var memberInsert = new SQLiteCommand(
+                    SQLiteCommand memberInsert = new SQLiteCommand(
                         $"""
                             insert into {tableName} (name, anchor_file, anchor, arg_list, type, parent_symbol) 
                             values ('{member.Name}', '{member.AnchorFile}', '{member.Anchor}', 

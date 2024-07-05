@@ -1,8 +1,9 @@
 ﻿using System.ComponentModel;
-using CppReferenceDocsExtension.Core.Converters;
 
-namespace CppReferenceDocsExtension.Editor.Settings {
-    public enum CppVersion {
+namespace CppReferenceDocsExtension.Editor.Settings
+{
+    public enum CppVersion
+    {
         Cpp98,
         Cpp03,
         Cpp11,
@@ -14,7 +15,8 @@ namespace CppReferenceDocsExtension.Editor.Settings {
         Latest
     }
 
-    internal class DocumentationOptions : BaseOptionModel<DocumentationOptions> {
+    internal class DocumentationOptions : BaseOptionModel<DocumentationOptions>
+    {
         [Category("Documentation")]
         [DisplayName("C/C++ Standard Version")]
         [Description("The C/C++ standard used by default when displaying cppreference documentation")]

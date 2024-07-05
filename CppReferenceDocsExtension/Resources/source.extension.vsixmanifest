@@ -6,12 +6,12 @@
         <Description xml:space="preserve">Adds a documentation panel that displays cppreference.com content for the symbol selected by the cursor (C/C++ only)</Description>
         <MoreInfo>https://github.com/vorlac/cppreference-docs-vs-extension</MoreInfo>
         <License>Resources\License.txt</License>
-        <Icon>Resources\Assets\cpp.ico</Icon>
-        <PreviewImage>Resources\Assets\cpp.ico</PreviewImage>
+        <Icon>Resources\Assets\cpp-icon.ico</Icon>
+        <PreviewImage>Resources\Assets\cpp-icon.ico</PreviewImage>
         <Tags>C, C++, C/C++, documentation, cppreference, tooltip, editor</Tags>
     </Metadata>
     <Installation>
-        <InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[17.0, 18.0)">
+        <InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[17.0,)">
             <ProductArchitecture>amd64</ProductArchitecture>
         </InstallationTarget>
     </Installation>
@@ -19,7 +19,7 @@
         <Dependency Id="Microsoft.Framework.NDP" DisplayName="Microsoft .NET Framework" d:Source="Manual" Version="[4.8,)" />
     </Dependencies>
     <Prerequisites>
-        <Prerequisite Id="Microsoft.VisualStudio.Component.CoreEditor" Version="[17.0,18.0)" DisplayName="Visual Studio core editor" />
+        <Prerequisite Id="Microsoft.VisualStudio.Component.CoreEditor" Version="[17.0,)" DisplayName="Visual Studio core editor" />
     </Prerequisites>
     <Assets>
         <Asset Type="Microsoft.VisualStudio.VsPackage" d:Source="Project" d:ProjectName="%CurrentProject%" Path="|%CurrentProject%;PkgdefProjectOutputGroup|" />

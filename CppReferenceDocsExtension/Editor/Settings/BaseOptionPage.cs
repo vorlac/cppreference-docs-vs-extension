@@ -1,8 +1,10 @@
 ﻿using Microsoft.VisualStudio.Shell;
 
-namespace CppReferenceDocsExtension.Editor.Settings {
+namespace CppReferenceDocsExtension.Editor.Settings
+{
     internal class BaseOptionPage<T> : DialogPage
-        where T : BaseOptionModel<T>, new() {
+        where T : BaseOptionModel<T>, new()
+    {
         private readonly BaseOptionModel<T> model;
 
         public BaseOptionPage() {

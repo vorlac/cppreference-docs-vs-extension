@@ -5,16 +5,38 @@ using CppReferenceDocsExtension.Core.Utils;
 using Microsoft.Web.WebView2.Core;
 using Serilog;
 
-namespace CppReferenceDocsExtension.Editor.ToolWindow {
-    partial class DocsPanelBrowserWindowControl {
-        private async Task<T> GetCoreWebView2ValueAsync<T>(Func<CoreWebView2, T> func) {
-            await this.webView.EnsureCoreWebView2Async();
-
-            return func(this.webView.CoreWebView2);
+namespace CppReferenceDocsExtension.Editor.ToolWindow
+{
+    public partial class DocsPanelBrowserWindowControl
+    {
+        public DocsPanelBrowserWindowControl(Action<string> setTitleAction)
+            : this() {
+            this.SetTitleAction = setTitleAction;
         }
 
         private void BrowseBackCmdCanExecute(object sender, CanExecuteRoutedEventArgs e) {
             e.CanExecute = !this.isNavigating && (this.webView?.CoreWebView2?.CanGoBack ?? false);
+        }
+
+        private void BrowseForwardCmdCanExecute(object sender, CanExecuteRoutedEventArgs e) {
+            e.CanExecute = !this.isNavigating && (this.webView?.CoreWebView2?.CanGoForward ?? false);
+        }
+
+        private void RefreshCmdCanExecute(object sender, CanExecuteRoutedEventArgs e) {
+            e.CanExecute = !this.isNavigating && this.webView?.CoreWebView2 != null;
+        }
+
+        private void BrowseHomeCmdCanExecute(object sender, CanExecuteRoutedEventArgs e) {
+            e.CanExecute = !this.isNavigating && this.webView?.CoreWebView2 != null;
+        }
+
+        private void GoToPageCmdCanExecute(object sender, CanExecuteRoutedEventArgs e) {
+            e.CanExecute = !this.isNavigating && this.webView?.CoreWebView2 != null;
+        }
+
+        private async Task<T> GetCoreWebView2ValueAsync<T>(Func<CoreWebView2, T> func) {
+            await this.webView.EnsureCoreWebView2Async();
+            return func(this.webView.CoreWebView2);
         }
 
         private void BrowseBackCmdExecuted(object target, ExecutedRoutedEventArgs e) {
@@ -27,10 +49,6 @@ namespace CppReferenceDocsExtension.Editor.ToolWindow {
             }
         }
 
-        private void BrowseForwardCmdCanExecute(object sender, CanExecuteRoutedEventArgs e) {
-            e.CanExecute = !this.isNavigating && (this.webView?.CoreWebView2?.CanGoForward ?? false);
-        }
-
         private void BrowseForwardCmdExecuted(object target, ExecutedRoutedEventArgs e) {
             Log.Verbose($"Navigating Forward");
             try {
@@ -39,10 +57,6 @@ namespace CppReferenceDocsExtension.Editor.ToolWindow {
             catch (Exception ex) {
                 HandleError(nameof(this.GoToPageCmdExecuted), ex);
             }
-        }
-
-        private void RefreshCmdCanExecute(object sender, CanExecuteRoutedEventArgs e) {
-            e.CanExecute = !this.isNavigating && this.webView?.CoreWebView2 != null;
         }
 
         private void RefreshCmdExecuted(object target, ExecutedRoutedEventArgs e) {
@@ -55,11 +69,6 @@ namespace CppReferenceDocsExtension.Editor.ToolWindow {
             }
         }
 
-        private void BrowseHomeCmdCanExecute(object sender, CanExecuteRoutedEventArgs e) {
-            e.CanExecute = !this.isNavigating
-                        && this.webView?.CoreWebView2 != null;
-        }
-
         private async void BrowseHomeCmdExecuted(object target, ExecutedRoutedEventArgs e) {
             Log.Verbose($"Navigating to Home Page");
             try {
@@ -68,10 +77,6 @@ namespace CppReferenceDocsExtension.Editor.ToolWindow {
             catch (Exception ex) {
                 HandleError(nameof(this.GoToPageCmdExecuted), ex);
             }
-        }
-
-        private void GoToPageCmdCanExecute(object sender, CanExecuteRoutedEventArgs e) {
-            e.CanExecute = !this.isNavigating && this.webView?.CoreWebView2 != null;
         }
 
         private async void GoToPageCmdExecuted(object target, ExecutedRoutedEventArgs e) {

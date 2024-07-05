@@ -8,8 +8,10 @@ using Microsoft.VisualStudio.Language.StandardClassification;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Adornments;
 
-namespace CppReferenceDocsExtension.Editor.ToolTip {
-    internal sealed class DocsToolTipAsyncSource : IAsyncQuickInfoSource {
+namespace CppReferenceDocsExtension.Editor.ToolTip
+{
+    internal sealed class DocsToolTipAsyncSource : IAsyncQuickInfoSource
+    {
         private static readonly ImageId Icon = KnownMonikers.AbstractCube.ToImageId();
         private readonly ITextBuffer textBuffer;
 
@@ -26,7 +28,7 @@ namespace CppReferenceDocsExtension.Editor.ToolTip {
                 int lineNumber = triggerPoint.Value.GetContainingLine().LineNumber;
                 ITrackingSpan lineSpan = this.textBuffer.CurrentSnapshot.CreateTrackingSpan(line.Extent, SpanTrackingMode.EdgeInclusive);
 
-                var lineNumberElm = new ContainerElement(
+                ContainerElement lineNumberElm = new ContainerElement(
                     ContainerElementStyle.Wrapped,
                     new ImageElement(Icon),
                     new ClassifiedTextElement(
@@ -35,7 +37,7 @@ namespace CppReferenceDocsExtension.Editor.ToolTip {
                     )
                 );
 
-                var dateElm = new ContainerElement(
+                ContainerElement dateElm = new ContainerElement(
                     ContainerElementStyle.Stacked,
                     lineNumberElm,
                     new ClassifiedTextElement(

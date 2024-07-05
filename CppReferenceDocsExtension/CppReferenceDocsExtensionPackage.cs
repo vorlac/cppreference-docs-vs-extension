@@ -10,23 +10,26 @@ using Microsoft.VisualStudio.Shell.Interop;
 using Serilog;
 using Serilog.Core;
 using Serilog.Events;
+//
 using Constants = CppReferenceDocsExtension.Core.Constants;
 
-namespace CppReferenceDocsExtension {
+namespace CppReferenceDocsExtension
+{
     [PackageRegistration(UseManagedResourcesOnly = true, AllowsBackgroundLoading = true)]
     [InstalledProductRegistration("#110", "#112", "1.0", IconResourceID = 400)]
-    [ProvideMenuResource("Menus.ctmenu", 1)] [Guid(PackageGuidString)]
+    [ProvideMenuResource("Menus.ctmenu", 1)]
+    [Guid(PackageGuidString)]
     [ProvideToolWindow(
         typeof(DocsPanelBrowserWindow),
-        Style = VsDockStyle.Tabbed,
         DockedWidth = 600,
         Window = "DocumentWell",
         Orientation = ToolWindowOrientation.Right
     )]
     [ProvideOptionPage(typeof(DialogPageProvider.General), Constants.ExtensionName, "General", 0, 0, true)]
     [ProvideOptionPage(typeof(DialogPageProvider.Other), Constants.ExtensionName, "Other", 0, 0, true)]
-    public sealed class CppReferenceDocsExtensionPackage : AsyncPackage {
-        private const string PackageGuidString = "1ba34956-275f-48c6-889b-a8834db18c23";
+    public sealed class CppReferenceDocsExtensionPackage : AsyncPackage
+    {
+        private const string PackageGuidString = "DEADBEEF-FEEE-FEEE-CDCD-000000000000";
 
         protected override async Task InitializeAsync(CancellationToken cancellationToken, IProgress<ServiceProgressData> progress) {
             await this.JoinableTaskFactory.SwitchToMainThreadAsync();
@@ -37,12 +40,12 @@ namespace CppReferenceDocsExtension {
         private async void InitializeLogging() {
             const string format = "{Timestamp:HH:mm:ss.fff} [{Level}] {Pid} {Message}{NewLine}{Exception}";
             IVsOutputWindow outputWindow = this.GetService<SVsOutputWindow, IVsOutputWindow>();
-            var levelSwitch = new LoggingLevelSwitch { MinimumLevel = LogEventLevel.Verbose };
+            LoggingLevelSwitch levelSwitch = new LoggingLevelSwitch { MinimumLevel = LogEventLevel.Verbose };
             Exception exception = null;
             string message = "";
 
             try {
-                var settings = await GeneralOptions.GetLiveInstanceAsync();
+                GeneralOptions settings = await GeneralOptions.GetLiveInstanceAsync();
                 levelSwitch.MinimumLevel = settings.MinimumLoggingLevel;
             }
             catch (Exception ex) {
@@ -51,7 +54,7 @@ namespace CppReferenceDocsExtension {
                         + $"Could not retrieve Logging Configuration";
             }
 
-            var sink = new OutputPaneEventSink(outputWindow, format);
+            OutputPaneEventSink sink = new OutputPaneEventSink(outputWindow, format);
             Log.Logger = new LoggerConfiguration().MinimumLevel.ControlledBy(levelSwitch)
                                                   .WriteTo.Sink(sink, levelSwitch: levelSwitch)
                                                   .WriteTo.Trace(outputTemplate: format)

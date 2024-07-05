@@ -7,9 +7,11 @@ using Microsoft.Web.WebView2.Wpf;
 using Serilog;
 using Constants = CppReferenceDocsExtension.Core.Constants;
 
-namespace CppReferenceDocsExtension.Editor.ToolWindow {
-    [Guid("8ab2cef3-7c52-4e4a-8d07-1dd7f9f90a1c")]
-    public sealed class DocsPanelBrowserWindow : ToolWindowPane, IVsWindowFrameNotify2 {
+namespace CppReferenceDocsExtension.Editor.ToolWindow
+{
+    [Guid("DEADBEEF-FEEE-FEEE-CDCD-000000000001")]
+    public sealed class DocsPanelBrowserWindow : ToolWindowPane, IVsWindowFrameNotify2
+    {
         private readonly DocsPanelBrowserWindowControl control;
         private readonly WebView2 webView;
         private readonly DTE dte;
@@ -18,10 +20,9 @@ namespace CppReferenceDocsExtension.Editor.ToolWindow {
 
         public DocsPanelBrowserWindow() : base(null) {
             this.Caption = Constants.ExtensionName;
-            this.control = new DocsPanelBrowserWindowControl {
-                SetTitleAction = x =>
-                    this.Caption = x
-            };
+            this.control = new DocsPanelBrowserWindowControl(
+                x => this.Caption = x
+            );
 
             this.Content = this.control;
             this.webView = this.control.webView;

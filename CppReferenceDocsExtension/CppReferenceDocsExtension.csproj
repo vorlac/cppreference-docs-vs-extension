@@ -5,6 +5,13 @@
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
     <TargetFrameworkProfile />
   </PropertyGroup>
+  <PropertyGroup>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Resources\Assets\cpp-icon.ico</ApplicationIcon>
+  </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -48,7 +55,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Core\Constants.cs" />
-    <Compile Include="Core\Converters\GetEnumValuesConverter.cs" />
     <Compile Include="Core\GlobalSuppressions.cs" />
     <Compile Include="Editor\Settings\BaseOptionModel.cs" />
     <Compile Include="Editor\Settings\BaseOptionPage.cs">
@@ -69,6 +75,11 @@
     <Compile Include="Editor\ToolWindow\DocsPanelBrowserWindowControl.commands.cs" />
     <Compile Include="Editor\ToolWindow\DocsPanelBrowserWindowControl.xaml.cs">
       <DependentUpon>DocsPanelBrowserWindowControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Resources\VSPackage.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>VSPackage.resx</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -116,17 +127,21 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Resources\Assets\cpp.ico">
+    <Content Include="Resources\Assets\cpp-icon.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="Resources\Assets\WebBrowserCommand.png" />
+    <Content Include="Resources\Assets\cpp-icon.png" />
+    <Content Include="Resources\Assets\web-browser-icons.png" />
     <VSCTCompile Include="CppReferenceDocsExtensionPackage.vsct">
       <ResourceName>Menus.ctmenu</ResourceName>
     </VSCTCompile>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\VSPackage.resx" />
+    <EmbeddedResource Include="Resources\VSPackage.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>VSPackage.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

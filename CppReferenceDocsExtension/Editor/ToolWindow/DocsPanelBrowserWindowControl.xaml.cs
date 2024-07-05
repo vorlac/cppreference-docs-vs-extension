@@ -20,28 +20,75 @@ namespace CppReferenceDocsExtension.Editor.ToolWindow
 {
     public partial class DocsPanelBrowserWindowControl
     {
-        private readonly ILogger log = Log.Logger;
-        private readonly List<CoreWebView2Frame> webViewFrames = new List<CoreWebView2Frame>();
         private CoreWebView2Environment environment;
-
-        private bool isNavigating = false;
-        private bool isFirstTimeLoad = true;
+        private List<CoreWebView2Frame> webViewFrames =
+            new List<CoreWebView2Frame>();
 
         public IServiceProvider Services { get; set; }
-        public Action<string> SetTitleAction { get; set; }
+        private Action<string> SetTitleAction { get; }
 
-        public DocsPanelBrowserWindowControl() {
+        private bool IsNavigating { get; set; } = false;
+        private bool IsFirstTimeLoad { get; set; } = true;
+
+        public DocsPanelBrowserWindowControl(Action<string> setTitleAction)
+            : this() {
+            this.SetTitleAction = setTitleAction;
+        }
+
+        private DocsPanelBrowserWindowControl() {
             try {
                 this.InitializeComponent();
                 this.InitializeAddressBar();
                 this.InitializeWebView();
-                this.AttachControlEventHandlers(this.webView);
 
-                this.Loaded += this.WebBrowserWindowControl_Loaded;
-                this.Unloaded += this.WebBrowserWindowControl_Unloaded;
+                this.AttachControlEventHandlers(this.webView);
+                this.Loaded += this.DocsWindowControlLoaded;
+                this.Unloaded += this.DocsWindowControlUnloaded;
             }
             catch (Exception ex) {
                 HandleError("Constructor", ex);
+            }
+        }
+
+        private void AttachControlEventHandlers(WebView2 control) {
+            control.NavigationStarting += this.OnNavigationStarting;
+            control.NavigationCompleted += this.OnNavigationCompleted;
+            control.CoreWebView2InitializationCompleted += this.OnWebViewInitCompleted;
+        }
+
+        private void OnWebViewInitCompleted(object sender, WebViewInitCompletedEventArgs e) {
+            if (!e.IsSuccess)
+                HandleError($"WebView creation failed: {e.InitializationException.Message}", e.InitializationException);
+            else {
+                this.webView.CoreWebView2.DocumentTitleChanged += this.OnWebViewDocumentTitleChanged;
+                this.webView.CoreWebView2.FrameCreated += this.OnWebViewHandleIFrames;
+                this.SetDefaultDownloadDialogPosition();
+            }
+        }
+
+        private async Task NavigateToAsync(Uri uri) {
+            await this.webView.EnsureCoreWebView2Async();
+            this.webView.CoreWebView2.Navigate(uri.ToString());
+            Log.Verbose($"Initiated Navigation to '{uri}'");
+        }
+
+        private void OnWebViewHandleIFrames(object sender, CoreWebView2FrameCreatedEventArgs args) {
+            this.webViewFrames.Add(args.Frame);
+            args.Frame.Destroyed += (frameDestroyedSender, frameDestroyedArgs) => {
+                CoreWebView2Frame frameToRemove = this.webViewFrames.SingleOrDefault(r => r.IsDestroyed() == 1);
+                if (frameToRemove != null)
+                    this.webViewFrames.Remove(frameToRemove);
+            };
+        }
+
+        private async void GoToPageCmdExecuted(object target, ExecutedRoutedEventArgs e) {
+            try {
+                Log.Verbose($"Navigating to '{e.Parameter ?? "<null>"}'");
+                Uri uri = UriHelper.MakeUri((string)e.Parameter);
+                await this.NavigateToAsync(uri);
+            }
+            catch (Exception ex) {
+                HandleError(nameof(this.GoToPageCmdExecuted), ex);
             }
         }
 
@@ -53,7 +100,7 @@ namespace CppReferenceDocsExtension.Editor.ToolWindow
 
                     // If the textbox is not yet focused, give it focus
                     // and stop further processing of this click event.
-                    _ = this.addressBar.Focus();
+                    this.addressBar.Focus();
                     e.Handled = true;
                 };
 
@@ -81,12 +128,6 @@ namespace CppReferenceDocsExtension.Editor.ToolWindow
             }
         }
 
-        private void AttachControlEventHandlers(WebView2 control) {
-            control.NavigationStarting += this.OnNavigationStarting;
-            control.NavigationCompleted += this.OnNavigationCompleted;
-            control.CoreWebView2InitializationCompleted += this.OnCoreWebView2InitializationCompleted;
-        }
-
         private void OnNavigationStarting(object sender, CoreWebView2NavigationStartingEventArgs e) {
             Log.Verbose(
                 $"{e.NavigationId} - "
@@ -95,49 +136,18 @@ namespace CppReferenceDocsExtension.Editor.ToolWindow
               + $"Redirected: {e.IsRedirected}"
             );
 
-            this.isNavigating = true;
+            this.IsNavigating = true;
             RequeryCommands();
         }
 
         private void OnNavigationCompleted(object sender, WebViewNavCompletedEventArgs e) {
             string status = e.HttpStatusCode.ToString();
-            if (e.WebErrorStatus != CoreWebView2WebErrorStatus.Unknown) {
+            if (e.WebErrorStatus != CoreWebView2WebErrorStatus.Unknown)
                 status += $" ({e.WebErrorStatus})";
-            }
 
             Log.Verbose($"{e.NavigationId} - Navigation Completed. Status: {status}");
-            this.isNavigating = false;
+            this.IsNavigating = false;
             RequeryCommands();
-        }
-
-        private void OnCoreWebView2InitializationCompleted(object sender, WebViewInitCompletedEventArgs e) {
-            if (!e.IsSuccess) {
-                HandleError(
-                    $"WebView2 creation failed: {e.InitializationException.Message}",
-                    e.InitializationException
-                );
-
-                return;
-            }
-
-            this.webView.CoreWebView2.DocumentTitleChanged += this.OnWebViewDocumentTitleChanged;
-            this.webView.CoreWebView2.FrameCreated += this.OnWebViewHandleIFrames;
-            this.SetDefaultDownloadDialogPosition();
-        }
-
-        private void OnWebViewDocumentTitleChanged(object sender, object e) {
-            this.SetTitleAction?.Invoke(this.webView.CoreWebView2.DocumentTitle);
-        }
-
-        private void OnWebViewHandleIFrames(object sender, CoreWebView2FrameCreatedEventArgs args) {
-            this.webViewFrames.Add(args.Frame);
-            args.Frame.Destroyed += (frameDestroyedSender, frameDestroyedArgs) => {
-                CoreWebView2Frame frameToRemove = this.webViewFrames.SingleOrDefault(r => r.IsDestroyed() == 1);
-
-                if (frameToRemove != null) {
-                    _ = this.webViewFrames.Remove(frameToRemove);
-                }
-            };
         }
 
         private void SetDefaultDownloadDialogPosition() {
@@ -159,26 +169,14 @@ namespace CppReferenceDocsExtension.Editor.ToolWindow
             }
         }
 
-        private static void RequeryCommands() {
-            CommandManager.InvalidateRequerySuggested();
-        }
-
-        private static void HandleError(string message, Exception exception = null) {
-            Log.Error(exception, $"{nameof(DocsPanelBrowserWindowControl)} - {message}");
-        }
-
-        private void WebBrowserWindowControl_Unloaded(object sender, RoutedEventArgs e) {
-            Log.Verbose("Unloaded Event Handler");
-        }
-
-        private async void WebBrowserWindowControl_Loaded(object sender, RoutedEventArgs e) {
+        private async void DocsWindowControlLoaded(object sender, RoutedEventArgs e) {
             Log.Verbose("Loaded Event Handler");
             try {
                 // Forcing a size change to make the web view correct its position on init.
                 this.rightFiller.Width = Math.Abs(this.rightFiller.Width - 1.0) < 0.001 ? 0.0 : 1.0;
-                if (this.isFirstTimeLoad) {
+                if (this.IsFirstTimeLoad) {
                     Log.Verbose($"First time Load: navigate to Home Page");
-                    this.isFirstTimeLoad = false;
+                    this.IsFirstTimeLoad = false;
                     await this.NavigateToHomeAsync();
                 }
             }
@@ -187,13 +185,20 @@ namespace CppReferenceDocsExtension.Editor.ToolWindow
             }
         }
 
-        private async Task NavigateToAsync(Uri uri) {
-            await this.webView.EnsureCoreWebView2Async();
-            // Setting webView.Source will not trigger a navigation
-            // if the Source is the same as the previous Source.
-            // CoreWebView.Navigate() will always trigger a navigation.
-            this.webView.CoreWebView2.Navigate(uri.ToString());
-            Log.Verbose($"Initiated Navigation to '{uri}'");
+        private void DocsWindowControlUnloaded(object sender, RoutedEventArgs e) {
+            Log.Verbose("Unloaded Event Handler");
+        }
+
+        private void OnWebViewDocumentTitleChanged(object sender, object e) {
+            this.SetTitleAction?.Invoke(this.webView.CoreWebView2.DocumentTitle);
+        }
+
+        private static void RequeryCommands() {
+            CommandManager.InvalidateRequerySuggested();
+        }
+
+        private static void HandleError(string message, Exception exception = null) {
+            Log.Error(exception, $"{nameof(DocsPanelBrowserWindowControl)} - {message}");
         }
 
         private async Task NavigateToHomeAsync() {
@@ -208,8 +213,64 @@ namespace CppReferenceDocsExtension.Editor.ToolWindow
             }
         }
 
-        private T GetService<T>() where T : class {
-            return this.Services.GetService<T>();
+        private void BrowseBackCmdExecuted(object target, ExecutedRoutedEventArgs e) {
+            try {
+                Log.Verbose("Navigating Backward");
+                this.webView.CoreWebView2.GoBack();
+            }
+            catch (Exception ex) {
+                HandleError(nameof(this.GoToPageCmdExecuted), ex);
+            }
+        }
+
+        private void BrowseForwardCmdExecuted(object target, ExecutedRoutedEventArgs e) {
+            try {
+                Log.Verbose("Navigating Forward");
+                this.webView.CoreWebView2.GoForward();
+            }
+            catch (Exception ex) {
+                HandleError(nameof(this.GoToPageCmdExecuted), ex);
+            }
+        }
+
+        private void RefreshCmdExecuted(object target, ExecutedRoutedEventArgs e) {
+            try {
+                Log.Verbose("Reloading Current Page");
+                this.webView.CoreWebView2.Reload();
+            }
+            catch (Exception ex) {
+                HandleError(nameof(this.GoToPageCmdExecuted), ex);
+            }
+        }
+
+        private async void BrowseHomeCmdExecuted(object target, ExecutedRoutedEventArgs e) {
+            try {
+                Log.Verbose("Navigating to Home Page");
+                await this.NavigateToHomeAsync();
+            }
+            catch (Exception ex) {
+                HandleError(nameof(this.GoToPageCmdExecuted), ex);
+            }
+        }
+
+        private void CanExecuteBrowseBackCmd(object sender, CanExecuteRoutedEventArgs e) {
+            e.CanExecute = !this.IsNavigating && (this.webView?.CoreWebView2?.CanGoBack ?? false);
+        }
+
+        private void CanExecuteBrowseForwardCmd(object sender, CanExecuteRoutedEventArgs e) {
+            e.CanExecute = !this.IsNavigating && (this.webView?.CoreWebView2?.CanGoForward ?? false);
+        }
+
+        private void CanExecuteRefreshCmd(object sender, CanExecuteRoutedEventArgs e) {
+            e.CanExecute = !this.IsNavigating && this.webView?.CoreWebView2 != null;
+        }
+
+        private void CanExecuteBrowseHomeCmd(object sender, CanExecuteRoutedEventArgs e) {
+            e.CanExecute = !this.IsNavigating && this.webView?.CoreWebView2 != null;
+        }
+
+        private void CanExecuteGoToPageCmd(object sender, CanExecuteRoutedEventArgs e) {
+            e.CanExecute = !this.IsNavigating && this.webView?.CoreWebView2 != null;
         }
     }
 }

@@ -2,6 +2,6 @@
 {
     internal static class Constants
     {
-        public const string ExtensionName = "CppReference Docs Panel";
+        public const string ExtensionName = @"C/C++ Documentation Panel";
     }
 }

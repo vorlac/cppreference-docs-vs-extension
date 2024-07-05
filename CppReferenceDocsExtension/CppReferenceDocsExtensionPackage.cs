@@ -33,7 +33,7 @@ namespace CppReferenceDocsExtension
 
         protected override async Task InitializeAsync(CancellationToken cancellationToken, IProgress<ServiceProgressData> progress) {
             await this.JoinableTaskFactory.SwitchToMainThreadAsync();
-            await DocsPanelBrowserCommand.InitializeAsync(this);
+            await OpenDocsPanelBrowserCommand.InitializeAsync(this);
             this.InitializeLogging();
         }
 

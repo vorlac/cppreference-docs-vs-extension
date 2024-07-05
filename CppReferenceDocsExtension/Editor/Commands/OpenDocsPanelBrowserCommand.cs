@@ -7,22 +7,24 @@ using Serilog;
 
 namespace CppReferenceDocsExtension.Editor.ToolWindow
 {
-    internal sealed class DocsPanelBrowserCommand
+    internal sealed class OpenDocsPanelBrowserCommand
     {
         private static class Constants
         {
             private const int CommandID = 0x0100;
             private const string CommandSetID = "DEADBEEF-FEEE-FEEE-CDCD-000000000002";
 
-            public static CommandID MenuCommandID { get; }
-                = new CommandID(new Guid(CommandSetID), CommandID);
+            public static CommandID MenuCommandID { get; } = new CommandID(
+                new Guid(CommandSetID),
+                CommandID
+            );
         }
 
         private readonly DTE dte;
         private readonly ILogger log = Log.Logger;
         private readonly AsyncPackage package;
 
-        private DocsPanelBrowserCommand(AsyncPackage asyncPackage, DTE dteInstance, OleMenuCommandService commandService) {
+        private OpenDocsPanelBrowserCommand(AsyncPackage asyncPackage, DTE dteInstance, OleMenuCommandService commandService) {
             if (commandService == null)
                 throw new ArgumentNullException(nameof(commandService));
             if (dteInstance == null)
@@ -37,7 +39,7 @@ namespace CppReferenceDocsExtension.Editor.ToolWindow
             commandService.AddCommand(menuItem);
         }
 
-        public static DocsPanelBrowserCommand Instance { get; private set; }
+        public static OpenDocsPanelBrowserCommand Instance { get; private set; }
 
         public static async Task InitializeAsync(AsyncPackage package) {
             await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(package.DisposalToken);
@@ -46,7 +48,7 @@ namespace CppReferenceDocsExtension.Editor.ToolWindow
             ) as OleMenuCommandService;
 
             DTE dte = (DTE)await package.GetServiceAsync(typeof(DTE));
-            Instance = new DocsPanelBrowserCommand(package, dte, commandService);
+            Instance = new OpenDocsPanelBrowserCommand(package, dte, commandService);
         }
 
         private void Execute(object sender, EventArgs e) {
@@ -60,7 +62,7 @@ namespace CppReferenceDocsExtension.Editor.ToolWindow
                     ) as DocsPanelBrowserWindow;
 
                     if (window?.Frame == null)
-                        this.log.Error($"{nameof(DocsPanelBrowserCommand)}: Cannot create tool window");
+                        this.log.Error($"{nameof(OpenDocsPanelBrowserCommand)}: Cannot create tool window");
                 }
             );
         }

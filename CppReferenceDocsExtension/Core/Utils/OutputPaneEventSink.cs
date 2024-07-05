@@ -20,8 +20,8 @@ namespace CppReferenceDocsExtension.Core.Utils
         public OutputPaneEventSink(IVsOutputWindow outputWindow, string outputTemplate) {
             ThreadHelper.ThrowIfNotOnUIThread();
             this.formatter = new MessageTemplateTextFormatter(outputTemplate);
-            _ = ErrorHandler.ThrowOnFailure(outputWindow.CreatePane(SPaneGuid, Constants.ExtensionName, 1, 1));
-            _ = outputWindow.GetPane(SPaneGuid, out this.pane);
+            ErrorHandler.ThrowOnFailure(outputWindow.CreatePane(SPaneGuid, Constants.ExtensionName, 1, 1));
+            outputWindow.GetPane(SPaneGuid, out this.pane);
         }
 
         public void Emit(LogEvent logEvent) {
@@ -36,7 +36,7 @@ namespace CppReferenceDocsExtension.Core.Utils
                 ErrorHandler.ThrowOnFailure(this.pane.OutputStringThreadSafe(message));
 
             if (logEvent.Level == LogEventLevel.Error)
-                _ = this.pane.Activate();
+                this.pane.Activate();
         }
     }
 }

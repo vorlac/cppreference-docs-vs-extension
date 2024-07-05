@@ -16,7 +16,7 @@
                 <Parent guid="guidCppReferenceDocsExtensionPackageCmdSet" id="CppReferenceDocsMenuGroup" />
                 <Icon guid="guidCppIcon" id="bmpCppIcon" />
                 <Strings>
-                    <ButtonText>CppReference Docs</ButtonText>
+                    <ButtonText>C/C++ Documentation Panel</ButtonText>
                 </Strings>
             </Button>
         </Buttons>
@@ -30,14 +30,14 @@
     </Commands>
 
     <Symbols>
-        <GuidSymbol name="guidCppReferenceDocsExtensionPackage" value="{deadbeef-feee-feee-cdcd-000000000000}" />
+        <GuidSymbol name="guidCppReferenceDocsExtensionPackage" value="{DEADBEEF-FEEE-FEEE-CDCD-000000000000}" />
 
-        <GuidSymbol name="guidCppReferenceDocsExtensionPackageCmdSet" value="{deadbeef-feee-feee-cdcd-000000000002}">
+        <GuidSymbol name="guidCppReferenceDocsExtensionPackageCmdSet" value="{DEADBEEF-FEEE-FEEE-CDCD-000000000002}">
             <IDSymbol name="CppReferenceDocsMenuGroup" value="0x1020" />
             <IDSymbol name="DocsPanelBrowserWindowCommandId" value="0x0100" />
         </GuidSymbol>
 
-        <GuidSymbol name="guidImages" value="{deadbeef-feee-feee-cdcd-000000000003}">
+        <GuidSymbol name="guidImages" value="{DEADBEEF-FEEE-FEEE-CDCD-000000000003}">
             <IDSymbol name="bmpPic1" value="1" />
             <IDSymbol name="bmpPic2" value="2" />
             <IDSymbol name="bmpPicSearch" value="3" />
@@ -46,7 +46,7 @@
             <IDSymbol name="bmpPicStrikethrough" value="6" />
         </GuidSymbol>
 
-        <GuidSymbol name="guidCppIcon" value="{deadbeef-feee-feee-cdcd-000000000004}">
+        <GuidSymbol name="guidCppIcon" value="{DEADBEEF-FEEE-FEEE-CDCD-000000000004}">
             <IDSymbol name="bmpCppIcon" value="1" />
         </GuidSymbol>
     </Symbols>

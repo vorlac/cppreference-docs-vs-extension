@@ -42,19 +42,19 @@
   <UserControl.CommandBindings>
     <CommandBinding Command="NavigationCommands.BrowseBack"
                     Executed="BrowseBackCmdExecuted"
-                    CanExecute="BrowseBackCmdCanExecute" />
+                    CanExecute="CanExecuteBrowseBackCmd" />
     <CommandBinding Command="NavigationCommands.BrowseForward"
                     Executed="BrowseForwardCmdExecuted"
-                    CanExecute="BrowseForwardCmdCanExecute" />
+                    CanExecute="CanExecuteBrowseForwardCmd" />
     <CommandBinding Command="NavigationCommands.Refresh"
                     Executed="RefreshCmdExecuted"
-                    CanExecute="RefreshCmdCanExecute" />
+                    CanExecute="CanExecuteRefreshCmd" />
     <CommandBinding Command="NavigationCommands.BrowseHome"
                     Executed="BrowseHomeCmdExecuted"
-                    CanExecute="BrowseHomeCmdCanExecute" />
+                    CanExecute="CanExecuteBrowseHomeCmd" />
     <CommandBinding Command="NavigationCommands.GoToPage"
                     Executed="GoToPageCmdExecuted"
-                    CanExecute="GoToPageCmdCanExecute" />
+                    CanExecute="CanExecuteGoToPageCmd" />
   </UserControl.CommandBindings>
   <DockPanel Margin="2">
     <DockPanel DockPanel.Dock="Top" Margin="2">

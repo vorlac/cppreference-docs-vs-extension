@@ -24,7 +24,7 @@
         <Bitmaps>
             <Bitmap guid="guidImages" href="Resources\Assets\web-browser-icons.png"
                     usedList="bmpPic1, bmpPic2, bmpPicSearch, bmpPicX, bmpPicArrows, bmpPicStrikethrough" />
-            <Bitmap guid="guidCppIcon" href="Resources\Assets\cpp-icon.png"
+            <Bitmap guid="guidCppIcon" href="Resources\Assets\cpp.png"
                     usedList="bmpCppIcon" />
         </Bitmaps>
     </Commands>

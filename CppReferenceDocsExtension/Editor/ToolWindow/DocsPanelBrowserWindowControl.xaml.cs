@@ -21,8 +21,7 @@ namespace CppReferenceDocsExtension.Editor.ToolWindow
     public partial class DocsPanelBrowserWindowControl
     {
         private CoreWebView2Environment environment;
-        private List<CoreWebView2Frame> webViewFrames =
-            new List<CoreWebView2Frame>();
+        private readonly List<CoreWebView2Frame> webViewFrames = [];
 
         public IServiceProvider Services { get; set; }
         private Action<string> SetTitleAction { get; }
@@ -156,7 +155,7 @@ namespace CppReferenceDocsExtension.Editor.ToolWindow
                 const int defaultMarginY = 0;
                 const WebViewCornerPlacement cornerAlignment = WebViewCornerPlacement.TopLeft;
 
-                SD.Point margin = new SD.Point(defaultMarginX, defaultMarginY);
+                SD.Point margin = new(defaultMarginX, defaultMarginY);
                 this.webView.CoreWebView2.DefaultDownloadDialogCornerAlignment = cornerAlignment;
                 this.webView.CoreWebView2.DefaultDownloadDialogMargin = margin;
             }

@@ -18,15 +18,14 @@ namespace CppReferenceDocsExtension.Editor.Settings
     internal abstract class BaseOptionModel<T>
         where T : BaseOptionModel<T>, new()
     {
-        protected BaseOptionModel() { }
+        private static readonly AsyncLazy<T> LiveModel
+            = new(CreateAsync, ThreadHelper.JoinableTaskFactory);
 
-        private static readonly AsyncLazy<T> LiveModel =
-            new AsyncLazy<T>(CreateAsync, ThreadHelper.JoinableTaskFactory);
+        private static readonly AsyncLazy<ShellSettingsManager> SettingsManager
+            = new(GetSettingsManagerAsync, ThreadHelper.JoinableTaskFactory);
 
-        private static readonly AsyncLazy<ShellSettingsManager> SettingsManager =
-            new AsyncLazy<ShellSettingsManager>(GetSettingsManagerAsync, ThreadHelper.JoinableTaskFactory);
-
-        protected virtual string CollectionName { get; } = typeof(T).FullName;
+        protected virtual string CollectionName { get; }
+            = typeof(T).FullName;
 
         public static T Instance {
             get {
@@ -40,7 +39,7 @@ namespace CppReferenceDocsExtension.Editor.Settings
         }
 
         public static async Task<T> CreateAsync() {
-            T instance = new T();
+            T instance = new();
             await instance.LoadAsync();
             return instance;
         }
@@ -51,7 +50,8 @@ namespace CppReferenceDocsExtension.Editor.Settings
 
         protected virtual async Task LoadAsync() {
             ShellSettingsManager manager = await SettingsManager.GetValueAsync();
-            SettingsStore settingsStore = manager.GetReadOnlySettingsStore(SettingsScope.UserSettings);
+            SettingsStore settingsStore =
+                manager.GetReadOnlySettingsStore(SettingsScope.UserSettings);
 
             if (!settingsStore.CollectionExists(this.CollectionName)) {
                 return;
@@ -59,7 +59,9 @@ namespace CppReferenceDocsExtension.Editor.Settings
 
             foreach (PropertyInfo property in this.GetOptionProperties()) {
                 try {
-                    string serializedProp = settingsStore.GetString(this.CollectionName, property.Name);
+                    string serializedProp = settingsStore.GetString(
+                        this.CollectionName,
+                        property.Name);
                     object value = this.DeserializeValue(serializedProp, property.PropertyType);
                     property.SetValue(this, value);
                 }
@@ -73,13 +75,13 @@ namespace CppReferenceDocsExtension.Editor.Settings
             ThreadHelper.JoinableTaskFactory.Run(this.SaveAsync);
         }
 
-        public virtual async Task SaveAsync() {
+        protected virtual async Task SaveAsync() {
             ShellSettingsManager manager = await SettingsManager.GetValueAsync();
-            WritableSettingsStore settingsStore = manager.GetWritableSettingsStore(SettingsScope.UserSettings);
+            WritableSettingsStore settingsStore =
+                manager.GetWritableSettingsStore(SettingsScope.UserSettings);
 
-            if (!settingsStore.CollectionExists(this.CollectionName)) {
+            if (!settingsStore.CollectionExists(this.CollectionName))
                 settingsStore.CreateCollection(this.CollectionName);
-            }
 
             foreach (PropertyInfo property in this.GetOptionProperties()) {
                 string output = this.SerializeValue(property.GetValue(this));
@@ -87,15 +89,13 @@ namespace CppReferenceDocsExtension.Editor.Settings
             }
 
             T liveModel = await GetLiveInstanceAsync();
-
-            if (this != liveModel) {
+            if (this != liveModel)
                 await liveModel.LoadAsync();
-            }
         }
 
         protected virtual string SerializeValue(object value) {
-            using (MemoryStream stream = new MemoryStream()) {
-                BinaryFormatter formatter = new BinaryFormatter();
+            using (MemoryStream stream = new()) {
+                BinaryFormatter formatter = new();
                 formatter.Serialize(stream, value);
                 stream.Flush();
                 return Convert.ToBase64String(stream.ToArray());
@@ -105,8 +105,8 @@ namespace CppReferenceDocsExtension.Editor.Settings
         protected virtual object DeserializeValue(string value, Type type) {
             byte[] b = Convert.FromBase64String(value);
 
-            using (MemoryStream stream = new MemoryStream(b)) {
-                BinaryFormatter formatter = new BinaryFormatter();
+            using (MemoryStream stream = new(b)) {
+                BinaryFormatter formatter = new();
                 return formatter.Deserialize(stream);
             }
         }
@@ -118,13 +118,17 @@ namespace CppReferenceDocsExtension.Editor.Settings
             ) as IVsSettingsManager;
 
             Assumes.Present(svc);
-            return new ShellSettingsManager(svc);
+            return new(svc);
         }
 
         private IEnumerable<PropertyInfo> GetOptionProperties() {
             return this.GetType()
                        .GetProperties()
-                       .Where(p => p.PropertyType.IsSerializable && p.PropertyType.IsPublic);
+                       .Where(
+                            p => p.PropertyType is {
+                                IsSerializable: true, IsPublic: true
+                            }
+                        );
         }
     }
 }

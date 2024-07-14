@@ -7,7 +7,8 @@
              xmlns:platform="clr-namespace:Microsoft.VisualStudio.PlatformUI;assembly=Microsoft.VisualStudio.Shell.15.0"
              xmlns:wv2="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="200"
-             Name="CppReferenceDocsBrowser">
+             Name="CppReferenceDocsBrowser"
+             Style="{Binding Style.TargetType.UnderlyingSystemType, ElementName=webView, Mode=OneWay}">
   <UserControl.Resources>
     <Style TargetType="Control">
       <Setter Property="Background" Value="{DynamicResource {x:Static platform:ThemedDialogColors.WindowPanelBrushKey}}"/>
@@ -127,7 +128,7 @@
         <ColumnDefinition Width="*" />
         <ColumnDefinition Width="auto" />
       </Grid.ColumnDefinitions>
-      <wv2:WebView2 Name="webView" Grid.Column="0" Visibility="Visible" />
+      <wv2:WebView2 Name="webView" DefaultBackgroundColor="DarkGray" Grid.Column="0" Visibility="Visible" />
       <Rectangle x:Name="rightFiller" Grid.Column="1" Width="0" />
     </Grid>
   </DockPanel>

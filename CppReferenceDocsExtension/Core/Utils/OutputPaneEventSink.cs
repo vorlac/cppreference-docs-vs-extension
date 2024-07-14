@@ -12,21 +12,34 @@ namespace CppReferenceDocsExtension.Core.Utils
 {
     internal sealed class OutputPaneEventSink : ILogEventSink
     {
-        private static readonly Guid SPaneGuid = new Guid("8851EA3E-6283-4C9A-B31B-97D26037E6D3");
+        private static Guid PaneGuid { get; } = new("DEADBEEF-FEEE-FEEE-CDCD-100000000000");
 
         private readonly IVsOutputWindowPane pane;
         private readonly ITextFormatter formatter;
 
         public OutputPaneEventSink(IVsOutputWindow outputWindow, string outputTemplate) {
             ThreadHelper.ThrowIfNotOnUIThread();
+
             this.formatter = new MessageTemplateTextFormatter(outputTemplate);
-            ErrorHandler.ThrowOnFailure(outputWindow.CreatePane(SPaneGuid, Constants.ExtensionName, 1, 1));
-            outputWindow.GetPane(SPaneGuid, out this.pane);
+
+            ErrorHandler.ThrowOnFailure(
+                outputWindow.CreatePane(
+                    rguidPane: OutputPaneEventSink.PaneGuid,
+                    pszPaneName: Constants.ExtensionName,
+                    fInitVisible: 1,
+                    fClearWithSolution: 1
+                )
+            );
+
+            outputWindow.GetPane(
+                rguidPane: OutputPaneEventSink.PaneGuid,
+                ppPane: out this.pane
+            );
         }
 
         public void Emit(LogEvent logEvent) {
-            StringWriter sw = new StringWriter();
-            this.formatter.Format(logEvent, sw);
+            StringWriter sw = new();
+            this.formatter.Format(logEvent: logEvent, output: sw);
             string message = sw.ToString();
 
             ThreadHelper.ThrowIfNotOnUIThread();

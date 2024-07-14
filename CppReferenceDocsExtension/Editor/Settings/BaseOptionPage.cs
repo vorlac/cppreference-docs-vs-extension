@@ -7,8 +7,10 @@ namespace CppReferenceDocsExtension.Editor.Settings
     {
         private readonly BaseOptionModel<T> model;
 
-        public BaseOptionPage() {
-            this.model = ThreadHelper.JoinableTaskFactory.Run(BaseOptionModel<T>.CreateAsync);
+        protected BaseOptionPage() {
+            this.model = ThreadHelper.JoinableTaskFactory.Run(
+                BaseOptionModel<T>.CreateAsync
+            );
         }
 
         public override object AutomationObject => this.model;

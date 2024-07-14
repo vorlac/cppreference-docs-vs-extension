@@ -1,4 +1,5 @@
-﻿using System.Runtime.InteropServices;
+﻿using System.Reflection;
+using System.Runtime.InteropServices;
 using EnvDTE;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
@@ -14,15 +15,15 @@ namespace CppReferenceDocsExtension.Editor.ToolWindow
     {
         private readonly DocsPanelBrowserWindowControl control;
         private readonly WebView2 webView;
-        private readonly DTE dte;
+        //private readonly DTE dte;
 
         private readonly ILogger log = Log.Logger;
 
         public DocsPanelBrowserWindow() : base(null) {
+            this.log.Debug($"{this.GetType().Name}:{MethodBase.GetCurrentMethod()?.Name}");
+
             this.Caption = Constants.ExtensionName;
-            this.control = new DocsPanelBrowserWindowControl(
-                x => this.Caption = x
-            );
+            this.control = new(x => this.Caption = x);
 
             this.Content = this.control;
             this.webView = this.control.webView;
@@ -30,8 +31,8 @@ namespace CppReferenceDocsExtension.Editor.ToolWindow
             ThreadHelper.ThrowIfNotOnUIThread();
 
             // Retrieve DTE and listen to "Visual Studio Shutdown" event
-            this.dte = (DTE)Microsoft.VisualStudio.Shell.Package.GetGlobalService(typeof(DTE));
-            this.dte.Events.DTEEvents.OnBeginShutdown += this.OnVisualStudioShutDown;
+            DTE dte = (DTE)Microsoft.VisualStudio.Shell.Package.GetGlobalService(typeof(DTE));
+            dte.Events.DTEEvents.OnBeginShutdown += this.OnVisualStudioShutDown;
         }
 
         public int OnClose(ref uint pgrfSaveOptions) {
@@ -45,10 +46,10 @@ namespace CppReferenceDocsExtension.Editor.ToolWindow
         }
 
         protected override void Initialize() {
-            this.log.Verbose($"Initializing {nameof(DocsPanelBrowserWindow)}");
+            this.log.Debug($"Initializing {nameof(DocsPanelBrowserWindow)}");
             base.Initialize();
             this.control.Services = this;
-            this.log.Verbose($"Initialized {nameof(DocsPanelBrowserWindow)}");
+            this.log.Debug($"Initialized {nameof(DocsPanelBrowserWindow)}");
         }
 
         private void OnVisualStudioShutDown() {

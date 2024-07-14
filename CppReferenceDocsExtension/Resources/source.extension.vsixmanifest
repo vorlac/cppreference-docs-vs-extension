@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
+<PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011"
+    xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
     <Metadata>
-        <Identity Id="CppReferenceDocsExtension.60abc690-b427-4817-a811-e65e1a81bea5" Version="1.0.0.1" Language="en-US" Publisher="Sal Sudano" />
+        <Identity Id="CppReferenceDocsExtension.DEADBEEF-FEEE-FEEE-CDCD-F00F00F00F00" Version="1.0.0.2" Language="en-US" Publisher="Sal Sudano" />
         <DisplayName>C/C++ CppReference Documentation Panel</DisplayName>
         <Description xml:space="preserve">Adds a documentation panel that displays cppreference.com content for the symbol selected by the cursor (C/C++ only)</Description>
         <MoreInfo>https://github.com/vorlac/cppreference-docs-vs-extension</MoreInfo>
         <License>Resources\License.txt</License>
-        <Icon>Resources\Assets\cpp-icon.ico</Icon>
-        <PreviewImage>Resources\Assets\cpp-icon.ico</PreviewImage>
+        <Icon>Resources\Assets\cpp.ico</Icon>
+        <PreviewImage>Resources\Assets\cpp.png</PreviewImage>
         <Tags>C, C++, C/C++, documentation, cppreference, tooltip, editor</Tags>
     </Metadata>
     <Installation>
@@ -16,7 +17,7 @@
         </InstallationTarget>
     </Installation>
     <Dependencies>
-        <Dependency Id="Microsoft.Framework.NDP" DisplayName="Microsoft .NET Framework" d:Source="Manual" Version="[4.8,)" />
+        <Dependency Id="Microsoft.Framework.NDP" DisplayName="Microsoft .NET Framework" d:Source="Manual" Version="[4.7,)" />
     </Dependencies>
     <Prerequisites>
         <Prerequisite Id="Microsoft.VisualStudio.Component.CoreEditor" Version="[17.0,)" DisplayName="Visual Studio core editor" />
@@ -24,5 +25,6 @@
     <Assets>
         <Asset Type="Microsoft.VisualStudio.VsPackage" d:Source="Project" d:ProjectName="%CurrentProject%" Path="|%CurrentProject%;PkgdefProjectOutputGroup|" />
         <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="%CurrentProject%" Path="|%CurrentProject%|" />
+        <Asset Type="Microsoft.VisualStudio.CodeLensComponent" d:Source="Project" d:ProjectName="CppReferenceDocsExtensibility" Path="|CppReferenceDocsExtensibility|" d:VsixSubPath="$(OutputPath)" />
     </Assets>
 </PackageManifest>

@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace CppReferenceDocsExtension.Resources {
+namespace CppReferenceDocsExtensibility.Resources {
     using System;
     
     
@@ -22,14 +22,14 @@ namespace CppReferenceDocsExtension.Resources {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class VSPackage {
+    internal class Strings {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal VSPackage() {
+        internal Strings() {
         }
         
         /// <summary>
@@ -39,7 +39,7 @@ namespace CppReferenceDocsExtension.Resources {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("CppReferenceDocsExtension.Resources.VSPackage", typeof(VSPackage).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("CppReferenceDocsExtensibility.Resources.Strings", typeof(Strings).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -61,66 +61,11 @@ namespace CppReferenceDocsExtension.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to C/C++ CppReference Documentation Panel.
-        /// </summary>
-        internal static string _110 {
-            get {
-                return ResourceManager.GetString("110", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Adds a documentation panel that displays cppreference.com content for the symbol selected by the cursor (C/C++ only).
-        /// </summary>
-        internal static string _112 {
-            get {
-                return ResourceManager.GetString("112", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to CppReferenceDocsPanel.
-        /// </summary>
-        internal static string _113 {
-            get {
-                return ResourceManager.GetString("113", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
-        /// </summary>
-        internal static System.Drawing.Icon _400 {
-            get {
-                object obj = ResourceManager.GetObject("400", resourceCulture);
-                return ((System.Drawing.Icon)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to CppReferenceDocs Code Lens Provider.
+        ///   Looks up a localized string similar to ASDF C/C++ CppReference Code Lens Provider.
         /// </summary>
         internal static string CustomCodeLensProvider {
             get {
                 return ResourceManager.GetString("CustomCodeLensProvider", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to CppReferenceDocs Output Window Test.
-        /// </summary>
-        internal static string OutputWindowCommandDisplayName {
-            get {
-                return ResourceManager.GetString("OutputWindowCommandDisplayName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to CppReferenceDocs Extension.
-        /// </summary>
-        internal static string OutputWindowDisplayName {
-            get {
-                return ResourceManager.GetString("OutputWindowDisplayName", resourceCulture);
             }
         }
     }

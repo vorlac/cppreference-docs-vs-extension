@@ -4,6 +4,7 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using CppReferenceDocsExtension.Core.Utils;
+using CppReferenceDocsExtension.Editor;
 using CppReferenceDocsExtension.Editor.Commands;
 using CppReferenceDocsExtension.Editor.Settings;
 using CppReferenceDocsExtension.Editor.ToolWindow;
@@ -23,6 +24,10 @@ namespace CppReferenceDocsExtension
         PackageRegistration(
             UseManagedResourcesOnly = true,
             AllowsBackgroundLoading = true
+        )] [
+        ProvideAutoLoad(
+            cmdUiContextGuid: UIContextGuids80.SolutionExists,
+            flags: PackageAutoLoadFlags.BackgroundLoad
         )] [
         InstalledProductRegistration(
             productName: "#110",
@@ -65,8 +70,9 @@ namespace CppReferenceDocsExtension
         protected override async Task InitializeAsync(
             CancellationToken token, IProgress<ServiceProgressData> progress) {
             await this.JoinableTaskFactory.SwitchToMainThreadAsync();
-            await OpenDocsToolWindowCommand.InitializeAsync(this);
+            EditorUtils.Initialize(this);
 
+            await OpenDocsToolWindowCommand.InitializeAsync(this);
             this.InitializeLogging();
             this.log.Debug(messageTemplate: $"{this.GetType().Name}:{MethodBase.GetCurrentMethod()?.Name}");
         }

@@ -44,6 +44,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.ComponentModelHost" Version="17.10.191" />
+    <PackageReference Include="Microsoft.VisualStudio.Debugger.Contracts" Version="17.2.0" />
     <PackageReference Include="Microsoft.VisualStudio.Editor" Version="17.10.191" />
     <PackageReference Include="Microsoft.VisualStudio.Extensibility" Version="17.10.2079" />
     <PackageReference Include="Microsoft.VisualStudio.Extensibility.Contracts" Version="17.10.2079" />
@@ -53,6 +54,7 @@
     <PackageReference Include="Microsoft.VisualStudio.Imaging" Version="17.10.40170" />
     <PackageReference Include="Microsoft.VisualStudio.Imaging.Interop.14.0.DesignTime" Version="17.10.40152" />
     <PackageReference Include="Microsoft.VisualStudio.Interop" Version="17.10.40170" />
+    <PackageReference Include="Microsoft.VisualStudio.LanguageServices" Version="4.10.0" />
     <PackageReference Include="Microsoft.VisualStudio.SDK.Analyzers" Version="17.7.32">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -60,7 +62,9 @@
     <PackageReference Include="Microsoft.VisualStudio.Shell.15.0" Version="17.10.40170" />
     <PackageReference Include="Microsoft.VisualStudio.Shell.Framework" Version="17.10.40170" />
     <PackageReference Include="Microsoft.VisualStudio.Utilities" Version="17.10.40170" />
+    <PackageReference Include="Microsoft.VisualStudio.Workspace.VSIntegration" Version="16.3.43" />
     <PackageReference Include="StreamJsonRpc" Version="2.18.48" />
+    <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
     <PackageReference Include="System.Diagnostics.Contracts" Version="4.3.0" />
     <PackageReference Include="System.Reflection.Metadata" Version="8.0.0" />
     <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.0" />

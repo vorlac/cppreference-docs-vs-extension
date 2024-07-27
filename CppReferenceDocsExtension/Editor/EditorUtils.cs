@@ -6,6 +6,7 @@ using Microsoft;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -26,7 +27,6 @@ namespace CppReferenceDocsExtension.Editor
         public bool IsExternal { get; set; }
     };
 
-    [Flags]
     public enum VSProjectType
     {
         None,
@@ -36,59 +36,111 @@ namespace CppReferenceDocsExtension.Editor
     }
 
     [Serializable]
-    public struct NativeSymbol
+    [DebuggerDisplay("[{this.ElementType}] {this.ToString()}")]
+    public class NativeSymbol
     {
-        [Flags]
+        [Serializable]
         public enum Element
         {
-            Unknown = 1 << 0,
-            Namespace = 1 << 1,
-            Interface = 1 << 2,
-            Property = 1 << 3,
-            Union = 1 << 4,
-            Class = 1 << 5,
-            Struct = 1 << 6,
-            Function = 1 << 7,
-            Parameter = 1 << 8,
-            Variable = 1 << 9,
-            Macro = 1 << 10,
-            Delegate = 1 << 11,
-            Attribute = 1 << 12,
-            FunctionInvoke = 1 << 13,
-            LocalDeclaration = 1 << 14,
-
+            Unknown,
+            Namespace,
+            Interface,
+            Property,
+            Union,
+            Class,
+            Struct,
+            Function,
+            FunctionInvocation,
+            Parameter,
+            Variable,
+            Macro,
+            Definition,
+            Delegate,
+            Attribute,
+            HeaderInclude,
+            Assignment,
+            Inheritance,
+            TypeAlias,
+            LocalDeclaration,
             PropertySetter,
             PropertyGetter,
-
-            Enum = 1 << 15,
-
-            Other = 1 << 13,
+            Enum,
+            Other,
         };
 
-        [Flags]
+        [Flags] [Serializable]
         public enum Qualifier
         {
-            None,
-            Const,
-            ConstExpr,
-            ConstEval,
-            ConstInit,
-            Static,
-            Inline,
-            Mutable,
-            Volatile
+            None = 0,
+            Const = 1 << 0,
+            ConstExpr = 1 << 1,
+            ConstEval = 1 << 2,
+            ConstInit = 1 << 3,
+            Static = 1 << 4,
+            Inline = 1 << 5,
+            Mutable = 1 << 6,
+            Volatile = 1 << 7,
         };
+
+        public struct FileLocation
+        {
+            public int StartLine { get; set; }
+            public int StartOffset { get; set; }
+            public int EndLine { get; set; }
+            public int EndOffset { get; set; }
+        }
 
         public string Name { get; set; }
         public string Namespace { get; set; }
         public string Typename { get; set; }
         public Qualifier Qualifiers { get; set; }
         public Element ElementType { get; set; }
-        public List<NativeSymbol> Parameters { get; set; }
-        public List<NativeSymbol> Members { get; set; }
-        public List<NativeSymbol> Parent { get; set; }
-        public List<NativeSymbol> Children { get; set; }
-        public List<NativeSymbol> DerivedTypes { get; set; }
+        public List<NativeSymbol> Parameters { get; set; } = [];
+        public List<NativeSymbol> Members { get; set; } = [];
+        public List<NativeSymbol> Children { get; set; } = [];
+        public List<NativeSymbol> DerivedTypes { get; set; } = [];
+        public FileLocation Location { get; set; }
+
+        public override string ToString() {
+            switch (this.ElementType) {
+                case Element.Namespace: {
+                    return $"{this.Name}";
+                }
+                case Element.FunctionInvocation:
+                case Element.Function: {
+                    string parameters = string.Join(", ", this.Parameters);
+                    return $@"{this.Typename} {this.Name}({parameters})".TrimStart(' ');
+                }
+                case Element.HeaderInclude: {
+                    return $@"<{this.Name}>";
+                }
+                case Element.Interface:
+                case Element.Property:
+                case Element.Union:
+                case Element.Class:
+                case Element.Struct:
+                case Element.Enum:
+                case Element.Parameter:
+                case Element.Variable:
+                case Element.Macro:
+                case Element.Delegate:
+                case Element.Attribute:
+                case Element.LocalDeclaration:
+                case Element.PropertySetter:
+                case Element.PropertyGetter:
+                case Element.Unknown:
+                case Element.Definition:
+                case Element.Assignment:
+                case Element.Inheritance:
+                case Element.TypeAlias: {
+                    return $@"{this.Typename} {this.Name}";
+                }
+                case Element.Other:
+                default: {
+                    return $@"{this.Typename} {this.Namespace} {this.Name}";
+                }
+            }
+        }
     }
 
     public static class EditorUtils
@@ -128,7 +180,7 @@ namespace CppReferenceDocsExtension.Editor
             };
         }
 
-        public static async Task<string> FindCodeElementAtLocationAsync(DocumentLocation location) {
+        private static async Task<string> FindCodeElementAtLocationAsync(DocumentLocation location) {
             // Use VS intellisense data to find the struct scope and
             // store the first line before querying the pdb information
             await EditorUtils.Package.JoinableTaskFactory.SwitchToMainThreadAsync();
@@ -147,11 +199,11 @@ namespace CppReferenceDocsExtension.Editor
             CodeElements globalElements = model?.CodeElements;
             StringBuilder sb = new();
 
-            List<NativeSymbol> elems = EditorUtils.FindCodeElements(globalElements, 0);
+            List<NativeSymbol> elems = EditorUtils.FindCodeElements(globalElements);
             return await Task.FromResult(elems);
         }
 
-        private static List<NativeSymbol> FindCodeElements(IEnumerable elems, int depth) {
+        private static List<NativeSymbol> FindCodeElements(IEnumerable elems, int depth = 0) {
             ThreadHelper.ThrowIfNotOnUIThread();
             List<NativeSymbol> symbols = [];
             if (elems == null)
@@ -159,6 +211,15 @@ namespace CppReferenceDocsExtension.Editor
 
             ++depth;
             foreach (CodeElement element in elems) {
+                TextPoint startPos = element.GetStartPoint();
+                TextPoint endPos = element.GetEndPoint();
+                NativeSymbol.FileLocation symbolLocation = new() {
+                    StartLine = startPos.Line,
+                    StartOffset = startPos.LineCharOffset,
+                    EndLine = endPos.Line,
+                    EndOffset = endPos.LineCharOffset,
+                };
+
                 switch (element.Kind) {
                     // A class element
                     case vsCMElement.vsCMElementClass: {
@@ -166,62 +227,26 @@ namespace CppReferenceDocsExtension.Editor
                         symbols.Add(
                             new NativeSymbol {
                                 Name = e.FullName,
+                                Typename = e.Name,
                                 ElementType = NativeSymbol.Element.Class,
                                 Namespace = e.Namespace?.FullName,
                                 Members = EditorUtils.FindCodeElements(e.Members, depth),
-                                //Children = EditorUtils.FindCodeElements(e.Children, depth),
-                            }
-                        );
-                        break;
-                    }
-                    // A structure element
-                    case vsCMElement.vsCMElementStruct: {
-                        CodeStruct e = (CodeStruct)element;
-                        symbols.Add(
-                            new NativeSymbol {
-                                Name = e.FullName,
-                                ElementType = NativeSymbol.Element.Struct,
-                                Namespace = e.Namespace?.FullName,
-                                Members = EditorUtils.FindCodeElements(e.Members, depth),
-                                //Children = EditorUtils.FindCodeElements(e.Children, depth),
-                                //DerivedTypes = EditorUtils.FindCodeElements(e.DerivedTypes, depth),
-                            }
-                        );
-                        break;
-                    }
-                    // A union element
-                    case vsCMElement.vsCMElementUnion: {
-                        symbols.Add(
-                            new NativeSymbol {
-                                Name = element.FullName,
-                                ElementType = NativeSymbol.Element.Union,
-                                Children = EditorUtils.FindCodeElements(element.Children, depth),
-                            }
-                        );
-                        break;
-                    }
-                    // A namespace element
-                    case vsCMElement.vsCMElementNamespace: {
-                        CodeNamespace e = (CodeNamespace)element;
-                        symbols.Add(
-                            new NativeSymbol {
-                                Name = e.FullName,
-                                ElementType = NativeSymbol.Element.Namespace,
-                                Members = EditorUtils.FindCodeElements(e.Members, depth),
-                                //Children = EditorUtils.FindCodeElements(e.Children, depth),
+                                Location = symbolLocation,
                             }
                         );
                         break;
                     }
                     // A function element
                     case vsCMElement.vsCMElementFunction: {
+                        // std::function? lambda? functor? 
                         CodeFunction e = (CodeFunction)element;
                         symbols.Add(
                             new NativeSymbol {
-                                Name = e.FullName,
+                                Name = e.Name,
                                 ElementType = NativeSymbol.Element.Function,
-                                // Function element children are params
                                 Children = EditorUtils.FindCodeElements(e.Children, depth),
+                                Parameters = EditorUtils.FindCodeElements(e.Parameters, depth),
+                                Location = symbolLocation,
                                 // TODO: add overloads as a top level property
                                 // Overloads = EditorUtils.FindCodeElements(e.Overloads, depth),
                             }
@@ -246,12 +271,13 @@ namespace CppReferenceDocsExtension.Editor
 
                         symbols.Add(
                             new NativeSymbol {
-                                Name = e.FullName,
+                                Name = e.Name,
                                 ElementType = NativeSymbol.Element.Variable,
                                 Typename = e.Type.AsFullName,
                                 Qualifiers = qualifiers,
                                 // TODO: children?
                                 Children = EditorUtils.FindCodeElements(e.Children, depth),
+                                Location = symbolLocation,
                             }
                         );
                         break;
@@ -277,6 +303,20 @@ namespace CppReferenceDocsExtension.Editor
                                 ElementType = NativeSymbol.Element.Property,
                                 Typename = e.Type.AsFullName,
                                 Children = EditorUtils.FindCodeElements(e.Children, depth),
+                                Location = symbolLocation,
+                            }
+                        );
+                        break;
+                    }
+                    // A namespace element
+                    case vsCMElement.vsCMElementNamespace: {
+                        CodeNamespace e = (CodeNamespace)element;
+                        symbols.Add(
+                            new NativeSymbol {
+                                Name = e.FullName,
+                                ElementType = NativeSymbol.Element.Namespace,
+                                Members = EditorUtils.FindCodeElements(e.Members, depth),
+                                Location = symbolLocation,
                             }
                         );
                         break;
@@ -286,9 +326,11 @@ namespace CppReferenceDocsExtension.Editor
                         CodeParameter e = (CodeParameter)element;
                         symbols.Add(
                             new NativeSymbol {
-                                Name = e.FullName,
+                                Name = e.Name,
+                                Typename = e.Type.AsFullName,
                                 ElementType = NativeSymbol.Element.Parameter,
                                 Children = EditorUtils.FindCodeElements(e.Children, depth),
+                                Location = symbolLocation,
                             }
                         );
                         break;
@@ -302,6 +344,7 @@ namespace CppReferenceDocsExtension.Editor
                                 ElementType = NativeSymbol.Element.Attribute,
                                 Typename = e.Value,
                                 Children = EditorUtils.FindCodeElements(e.Children, depth),
+                                Location = symbolLocation,
                             }
                         );
                         break;
@@ -315,8 +358,8 @@ namespace CppReferenceDocsExtension.Editor
                                 ElementType = NativeSymbol.Element.Interface,
                                 Namespace = e.Namespace.FullName,
                                 Members = EditorUtils.FindCodeElements(e.Members, depth),
-                                //Children = EditorUtils.FindCodeElements(e.Children, depth),
                                 DerivedTypes = EditorUtils.FindCodeElements(e.DerivedTypes, depth),
+                                Location = symbolLocation,
                             }
                         );
                         break;
@@ -330,6 +373,7 @@ namespace CppReferenceDocsExtension.Editor
                                 ElementType = NativeSymbol.Element.Delegate,
                                 Namespace = e.Namespace.FullName,
                                 Members = EditorUtils.FindCodeElements(e.Members, depth),
+                                Location = symbolLocation,
                             }
                         );
                         break;
@@ -343,6 +387,33 @@ namespace CppReferenceDocsExtension.Editor
                                 ElementType = NativeSymbol.Element.Enum,
                                 Namespace = e.Namespace.FullName,
                                 Members = EditorUtils.FindCodeElements(e.Members, depth),
+                                Location = symbolLocation,
+                            }
+                        );
+                        break;
+                    }
+                    // A structure element
+                    case vsCMElement.vsCMElementStruct: {
+                        CodeStruct e = (CodeStruct)element;
+                        symbols.Add(
+                            new NativeSymbol {
+                                Name = e.FullName,
+                                ElementType = NativeSymbol.Element.Struct,
+                                Namespace = e.Namespace?.FullName,
+                                Members = EditorUtils.FindCodeElements(e.Members, depth),
+                                Location = symbolLocation,
+                            }
+                        );
+                        break;
+                    }
+                    // A union element
+                    case vsCMElement.vsCMElementUnion: {
+                        symbols.Add(
+                            new NativeSymbol {
+                                Name = element.FullName,
+                                ElementType = NativeSymbol.Element.Union,
+                                Children = EditorUtils.FindCodeElements(element.Children, depth),
+                                Location = symbolLocation,
                             }
                         );
                         break;
@@ -354,6 +425,7 @@ namespace CppReferenceDocsExtension.Editor
                                 Name = element.FullName,
                                 ElementType = NativeSymbol.Element.LocalDeclaration,
                                 Children = EditorUtils.FindCodeElements(element.Children, depth),
+                                Location = symbolLocation,
                             }
                         );
                         EditorUtils.FindCodeElements(element.Children, depth);
@@ -367,8 +439,10 @@ namespace CppReferenceDocsExtension.Editor
                         symbols.Add(
                             new NativeSymbol {
                                 Name = e.FullName,
-                                ElementType = NativeSymbol.Element.FunctionInvoke,
+                                ElementType = NativeSymbol.Element.FunctionInvocation,
                                 Children = EditorUtils.FindCodeElements(e.Children, depth),
+                                Parameters = EditorUtils.FindCodeElements(e.Parameters, depth),
+                                Location = symbolLocation,
                             }
                         );
                         break;
@@ -381,6 +455,43 @@ namespace CppReferenceDocsExtension.Editor
                                 Name = e.FullName,
                                 ElementType = NativeSymbol.Element.PropertySetter,
                                 Children = EditorUtils.FindCodeElements(e.Children, depth),
+                                Location = symbolLocation,
+                            }
+                        );
+                        break;
+                    }
+                    // An assignment statement element
+                    case vsCMElement.vsCMElementAssignmentStmt: {
+                        CodeElement e = (CodeElement)element;
+                        symbols.Add(
+                            new NativeSymbol {
+                                Name = e.FullName,
+                                ElementType = NativeSymbol.Element.Assignment,
+                                Location = symbolLocation,
+                            }
+                        );
+                        break;
+                    }
+                    // An inherits statement element
+                    case vsCMElement.vsCMElementInheritsStmt: {
+                        CodeElement e = (CodeElement)element;
+                        symbols.Add(
+                            new NativeSymbol {
+                                Name = e.FullName,
+                                ElementType = NativeSymbol.Element.Inheritance,
+                                Location = symbolLocation,
+                            }
+                        );
+                        break;
+                    }
+                    // An include statement element
+                    case vsCMElement.vsCMElementIncludeStmt: {
+                        CodeElement e = (CodeElement)element;
+                        symbols.Add(
+                            new NativeSymbol {
+                                Name = e.FullName,
+                                ElementType = NativeSymbol.Element.HeaderInclude,
+                                Location = symbolLocation,
                             }
                         );
                         break;
@@ -392,22 +503,16 @@ namespace CppReferenceDocsExtension.Editor
                                 Name = element.FullName,
                                 ElementType = NativeSymbol.Element.Macro,
                                 Children = EditorUtils.FindCodeElements(element.Children, depth),
+                                Location = symbolLocation,
                             }
                         );
                         break;
                     }
-                    // An assignment statement element
-                    case vsCMElement.vsCMElementAssignmentStmt:
-                    // An inherits statement element
-                    case vsCMElement.vsCMElementInheritsStmt:
+
                     // An implements statement element
                     case vsCMElement.vsCMElementImplementsStmt:
                     // An option statement element
                     case vsCMElement.vsCMElementOptionStmt:
-                    // A VB attributes statement element
-                    case vsCMElement.vsCMElementVBAttributeStmt:
-                    // A VB attribute group element
-                    case vsCMElement.vsCMElementVBAttributeGroup:
                     // An events declaration element
                     case vsCMElement.vsCMElementEventsDeclaration:
                     // A user-defined type declaration element
@@ -415,11 +520,31 @@ namespace CppReferenceDocsExtension.Editor
                     // A declare declaration element
                     case vsCMElement.vsCMElementDeclareDecl:
                     // A define statement element
-                    case vsCMElement.vsCMElementDefineStmt:
+                    case vsCMElement.vsCMElementDefineStmt: {
+                        CodeElement e = (CodeElement)element;
+                        symbols.Add(
+                            new NativeSymbol {
+                                Name = e.FullName,
+                                ElementType = NativeSymbol.Element.Definition,
+                                Children = EditorUtils.FindCodeElements(e.Children, depth),
+                                Location = symbolLocation,
+                            }
+                        );
+                        break;
+                    }
                     // A type definition element
-                    case vsCMElement.vsCMElementTypeDef:
-                    // An include statement element
-                    case vsCMElement.vsCMElementIncludeStmt:
+                    case vsCMElement.vsCMElementTypeDef: {
+                        CodeType e = (CodeType)element;
+                        symbols.Add(
+                            new NativeSymbol {
+                                Name = e.FullName,
+                                ElementType = NativeSymbol.Element.TypeAlias,
+                                Children = EditorUtils.FindCodeElements(e.Children, depth),
+                                Location = symbolLocation,
+                            }
+                        );
+                        break;
+                    }
                     // A using statement element
                     case vsCMElement.vsCMElementUsingStmt:
                     // A map element
@@ -442,6 +567,11 @@ namespace CppReferenceDocsExtension.Editor
                     case vsCMElement.vsCMElementEvent:
                     // A module element
                     case vsCMElement.vsCMElementModule:
+
+                    // A VB attributes statement element
+                    case vsCMElement.vsCMElementVBAttributeStmt:
+                    // A VB attribute group element
+                    case vsCMElement.vsCMElementVBAttributeGroup:
                     // An element not in the list
                     case vsCMElement.vsCMElementOther: {
                         symbols.Add(
@@ -449,6 +579,7 @@ namespace CppReferenceDocsExtension.Editor
                                 Name = element.FullName,
                                 ElementType = NativeSymbol.Element.Other,
                                 Children = EditorUtils.FindCodeElements(element.Children, depth),
+                                Location = symbolLocation,
                             }
                         );
                         break;
@@ -459,6 +590,7 @@ namespace CppReferenceDocsExtension.Editor
                                 Name = element.FullName,
                                 ElementType = NativeSymbol.Element.Unknown,
                                 Children = EditorUtils.FindCodeElements(element.Children, depth),
+                                Location = symbolLocation,
                             }
                         );
                         break;
@@ -474,13 +606,16 @@ namespace CppReferenceDocsExtension.Editor
                         Assumes.NotNullOrEmpty(symMembers);
                         NativeSymbol sym = symbols[symbols.Count - 1];
                         sym.Members = members;
+                        if (sym.Typename?.Length == 0)
+                            sym.Typename = $"{sym.Name}";
                     }
                     else {
                         symbols.Add(
                             new NativeSymbol {
                                 Name = e.FullName,
                                 ElementType = NativeSymbol.Element.Unknown,
-                                Namespace = e.Namespace.FullName
+                                Namespace = e.Namespace.FullName,
+                                Location = symbolLocation,
                             }
                         );
                     }
@@ -512,7 +647,7 @@ namespace CppReferenceDocsExtension.Editor
             return sb.ToString();
         }
 
-        public static async Task<Document> GetActiveDocumentAsync() {
+        private static async Task<Document> GetActiveDocumentAsync() {
             await EditorUtils.Package.JoinableTaskFactory.SwitchToMainThreadAsync();
             DTE2 applicationObject = EditorUtils.ServiceProvider.GetService(typeof(DTE))
                 as EnvDTE80.DTE2;
@@ -590,14 +725,12 @@ namespace CppReferenceDocsExtension.Editor
         public static void SaveActiveDocument() {
             ThreadHelper.ThrowIfNotOnUIThread();
 
-            //Get full file path
+            // Get full file path
             DTE2 applicationObject = ServiceProvider.GetService(typeof(DTE)) as EnvDTE80.DTE2;
             Assumes.Present(applicationObject);
-
             Document doc = applicationObject.ActiveDocument;
-            if (doc != null && !doc.ReadOnly && !doc.Saved) {
+            if (doc is { ReadOnly: false, Saved: false })
                 doc.Save();
-            }
         }
     }
 }

@@ -3,7 +3,7 @@
 namespace CppReferenceDocsExtensibility
 {
     [VisualStudioContribution]
-    public class ExtensibilityEntryPoint : Extension
+    public class OOPExtensibilityExtension : Extension
     {
         public override ExtensionConfiguration ExtensionConfiguration => new() {
             RequiresInProcessHosting = true,

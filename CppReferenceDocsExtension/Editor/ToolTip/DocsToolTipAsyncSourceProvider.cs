@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.Composition;
-using System.Reflection;
 using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Utilities;
@@ -15,9 +14,8 @@ namespace CppReferenceDocsExtension.Editor.ToolTip
         private readonly ILogger log = Log.Logger;
 
         public IAsyncQuickInfoSource TryCreateQuickInfoSource(ITextBuffer textBuffer) {
-            this.log.Verbose($"{this.GetType().Name}:{MethodBase.GetCurrentMethod()?.Name}");
             return textBuffer.Properties.GetOrCreateSingletonProperty(
-                () => new DocsToolTipAsyncSource(textBuffer)
+                () => new DocsToolTipAsyncSource(textBuffer as ITextBuffer2)
             );
         }
     }

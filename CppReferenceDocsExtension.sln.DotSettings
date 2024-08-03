@@ -111,8 +111,10 @@
 	<s:String x:Key="/Default/CodeStyle/Naming/CSharpNaming/Abbreviations/=DB/@EntryIndexedValue">DB</s:String>
 	<s:String x:Key="/Default/CodeStyle/Naming/CSharpNaming/Abbreviations/=DTE/@EntryIndexedValue">DTE</s:String>
 	<s:String x:Key="/Default/CodeStyle/Naming/CSharpNaming/Abbreviations/=GUID/@EntryIndexedValue">GUID</s:String>
+	<s:String x:Key="/Default/CodeStyle/Naming/CSharpNaming/Abbreviations/=MS/@EntryIndexedValue">MS</s:String>
 	<s:String x:Key="/Default/CodeStyle/Naming/CSharpNaming/Abbreviations/=OOP/@EntryIndexedValue">OOP</s:String>
 	<s:String x:Key="/Default/CodeStyle/Naming/CSharpNaming/Abbreviations/=URL/@EntryIndexedValue">URL</s:String>
+	<s:String x:Key="/Default/CodeStyle/Naming/CSharpNaming/UserRules/=ea941525_002Dd477_002D4015_002Dacef_002D10f7d15cc147/@EntryIndexedValue">&lt;Policy&gt;&lt;Descriptor Staticness="Static" AccessRightKinds="Private, Internal, PrivateProtected" Description="static_fields_should_have_prefix"&gt;&lt;ElementKinds&gt;&lt;Kind Name="ANY_FIELD" /&gt;&lt;/ElementKinds&gt;&lt;/Descriptor&gt;&lt;Policy Inspect="True" Prefix="" Suffix="" Style="AaBb" /&gt;&lt;/Policy&gt;</s:String>
 	<s:Boolean x:Key="/Default/Debugger/LocalVariablesEditorAdornmentsEnabled/@EntryValue">False</s:Boolean>
 	<s:Boolean x:Key="/Default/Debugger/ReturnValuesEditorAdornmentsEnabled/@EntryValue">False</s:Boolean>
 	<s:Boolean x:Key="/Default/Debugger/TrivialExpressionsEditorAdornmentsEnabled/@EntryValue">False</s:Boolean>

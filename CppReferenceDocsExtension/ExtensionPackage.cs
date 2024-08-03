@@ -13,38 +13,39 @@ using Microsoft.VisualStudio.Shell.Interop;
 using Serilog;
 using Serilog.Core;
 using Serilog.Events;
+using Constants = CppReferenceDocsExtension.Core.Package.Constants;
 
 namespace CppReferenceDocsExtension
 {
-    using Constants = Core.Constants;
+    using Constants = Constants;
 
     [
         // yo dawg, I heard you like dependency injection... :-|
-        Guid(guid: PackageGuidString)] [
+        Guid(Constants.GUID.Extension),
         PackageRegistration(
             UseManagedResourcesOnly = true,
             AllowsBackgroundLoading = true
-        )] [
+        ),
         ProvideAutoLoad(
             cmdUiContextGuid: UIContextGuids80.SolutionExists,
             flags: PackageAutoLoadFlags.BackgroundLoad
-        )] [
+        ),
         InstalledProductRegistration(
             productName: "#110",
             productDetails: "#112",
             productId: "1.0",
             IconResourceID = 400
-        )] [
+        ),
         ProvideMenuResource(
             resourceID: "Menus.ctmenu",
             version: 1
-        )] [
+        ),
         ProvideToolWindow(
             toolType: typeof(DocsPanelBrowserWindow),
             DockedWidth = 600,
             Window = "DocumentWell",
             Orientation = ToolWindowOrientation.Right
-        )] [
+        ),
         ProvideOptionPage(
             pageType: typeof(DialogPageProvider.General),
             categoryName: Constants.ExtensionName,
@@ -52,7 +53,7 @@ namespace CppReferenceDocsExtension
             categoryResourceID: 0,
             pageNameResourceID: 0,
             supportsAutomation: true
-        )] [
+        ),
         ProvideOptionPage(
             pageType: typeof(DialogPageProvider.Other),
             categoryName: Constants.ExtensionName,
@@ -65,7 +66,6 @@ namespace CppReferenceDocsExtension
     public sealed class ExtensionPackage : AsyncPackage
     {
         private readonly ILogger log = Log.Logger;
-        private const string PackageGuidString = "DEADBEEF-FEEE-FEEE-CDCD-000000000000";
 
         protected override async Task InitializeAsync(
             CancellationToken token, IProgress<ServiceProgressData> progress) {
@@ -84,7 +84,7 @@ namespace CppReferenceDocsExtension
             try {
                 GeneralOptions settings = await BaseOptionModel<GeneralOptions>.GetLiveInstanceAsync();
                 LoggingLevelSwitch levelSwitch = new() { MinimumLevel = settings.MinimumLoggingLevel };
-                OutputPaneEventSink sink = new(outputWindow: outputWindow, outputTemplate: format);
+                Logging sink = new(outputWindow: outputWindow, outputTemplate: format);
                 Log.Logger = new LoggerConfiguration().MinimumLevel.ControlledBy(levelSwitch: levelSwitch)
                                                       .WriteTo.Sink(logEventSink: sink, levelSwitch: levelSwitch)
                                                       .WriteTo.Trace(outputTemplate: format)

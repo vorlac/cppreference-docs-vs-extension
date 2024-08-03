@@ -24,7 +24,7 @@ namespace CppReferenceDocsExtension.Editor.Settings
     internal static class WebBrowserSettingsExtensions
     {
         public static Uri GetHomePageUri(this GeneralOptions settings) {
-            return UriHelper.MakeUri(settings.HomePage);
+            return Helpers.MakeUri(settings.HomePage);
         }
     }
 }

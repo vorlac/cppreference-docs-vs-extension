@@ -61,7 +61,8 @@ namespace CppReferenceDocsExtension.Editor.Settings
                 try {
                     string serializedProp = settingsStore.GetString(
                         this.CollectionName,
-                        property.Name);
+                        property.Name
+                    );
                     object value = this.DeserializeValue(serializedProp, property.PropertyType);
                     property.SetValue(this, value);
                 }

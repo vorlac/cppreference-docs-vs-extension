@@ -2,7 +2,7 @@
 
 namespace CppReferenceDocsExtension.Core.Utils
 {
-    internal static class UriHelper
+    class Helpers
     {
         public static Uri MakeUri(string rawUrl) {
             if (string.IsNullOrEmpty(rawUrl))

@@ -74,7 +74,10 @@ namespace CppReferenceDocsExtension.Editor.ToolWindow
         private void OnWebViewHandleIFrames(object sender, CoreWebView2FrameCreatedEventArgs args) {
             this.webViewFrames.Add(args.Frame);
             args.Frame.Destroyed += (frameDestroyedSender, frameDestroyedArgs) => {
-                CoreWebView2Frame frameToRemove = this.webViewFrames.SingleOrDefault(r => r.IsDestroyed() == 1);
+                CoreWebView2Frame frameToRemove = this.webViewFrames.SingleOrDefault(
+                    r => r.IsDestroyed() == 1
+                );
+
                 if (frameToRemove != null)
                     this.webViewFrames.Remove(frameToRemove);
             };
@@ -83,7 +86,7 @@ namespace CppReferenceDocsExtension.Editor.ToolWindow
         private async void GoToPageCmdExecuted(object target, ExecutedRoutedEventArgs e) {
             try {
                 Log.Verbose($"Navigating to '{e.Parameter ?? "<null>"}'");
-                Uri uri = UriHelper.MakeUri((string)e.Parameter);
+                Uri uri = Core.Utils.Helpers.MakeUri((string)e.Parameter);
                 await this.NavigateToAsync(uri);
             }
             catch (Exception ex) {

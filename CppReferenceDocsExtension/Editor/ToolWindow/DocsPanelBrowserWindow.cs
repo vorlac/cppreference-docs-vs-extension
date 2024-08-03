@@ -6,7 +6,7 @@ using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.Web.WebView2.Wpf;
 using Serilog;
-using Constants = CppReferenceDocsExtension.Core.Constants;
+using Constants = CppReferenceDocsExtension.Core.Package.Constants;
 
 namespace CppReferenceDocsExtension.Editor.ToolWindow
 {

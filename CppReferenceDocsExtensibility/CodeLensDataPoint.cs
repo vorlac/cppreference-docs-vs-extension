@@ -9,8 +9,7 @@ namespace CppReferenceDocsExtensibility
         public Task<CodeLensDataPointDescriptor> GetDataAsync(
             CodeLensDescriptorContext context, CancellationToken token) {
             return Task.FromResult(
-                result: new CodeLensDataPointDescriptor
-                {
+                result: new CodeLensDataPointDescriptor {
                     Description = "Shows Up Inline",
                     //ImageId = Shows an image next to the Code Lens entry
                     //IntValue = I haven't figured this one out yet!
@@ -26,6 +25,8 @@ namespace CppReferenceDocsExtensibility
         }
 
         public CodeLensDescriptor Descriptor { get; } = descriptor;
+    #pragma warning disable CS0067
         public event AsyncEventHandler InvalidatedAsync;
+    #pragma warning restore CS0067
     }
 }
